@@ -2,10 +2,15 @@ name: DontPickUp
 main: com.thefishnextdoor.dontpickup.Plugin
 version: 0.0.1
 api-version: 1.15
-author: TheFishNextDoor
-description: Description
+authors: ["TheFishNextDoor"]
+description: DontPickUp by TheFishNextDoor
 commands:
   dontpickup:
-    description: Description
-    usage: /dontpickup <subcommand>
+    description: Enable or disable the pickup of items
+    usage: /dontpickup <add|remove|list>
     aliases: [dpu]
+    permission: dpu.use
+permissions:
+  dpu.use:
+    description: Allows the use of the dontpickup command
+    default: true
