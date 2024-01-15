@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thefishnextdoor.dontpickup.commands.DontPickUp;
 import com.thefishnextdoor.dontpickup.events.Join;
+import com.thefishnextdoor.dontpickup.events.PickUp;
 import com.thefishnextdoor.dontpickup.events.Quit;
 
 public class Plugin extends JavaPlugin {
@@ -24,6 +25,7 @@ public class Plugin extends JavaPlugin {
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new Join(), this);
         pluginManager.registerEvents(new Quit(), this);
+        pluginManager.registerEvents(new PickUp(), this);
 
         LOGGER.info("dontpickup enabled");
     }

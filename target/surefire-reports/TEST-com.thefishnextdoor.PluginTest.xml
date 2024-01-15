@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-17.0.8.7-hotspot\bin"/>
-    <property name="sun.java.command" value="C:\Users\phill\AppData\Local\Temp\surefire14688874218863040350\surefirebooter2675838422010248490.jar C:\Users\phill\AppData\Local\Temp\surefire14688874218863040350 2024-01-14T19-36-58_872-jvmRun1 surefire9641205877762572708tmp surefire_05468398312197681474tmp"/>
+    <property name="sun.java.command" value="C:\Users\phill\AppData\Local\Temp\surefire16188088509294471902\surefirebooter7359348699159625182.jar C:\Users\phill\AppData\Local\Temp\surefire16188088509294471902 2024-01-14T19-50-26_796-jvmRun1 surefire3441345185441154165tmp surefire_014076118712199257494tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="c:\Users\phill\Documents\Code\Minecraft\DontPickUp\target\test-classes;c:\Users\phill\Documents\Code\Minecraft\DontPickUp\target\classes;C:\Users\phill\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\phill\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\phill\.m2\repository\org\spigotmc\spigot-api\1.15.1-R0.1-SNAPSHOT\spigot-api-1.15.1-R0.1-SNAPSHOT.jar;C:\Users\phill\.m2\repository\commons-lang\commons-lang\2.6\commons-lang-2.6.jar;C:\Users\phill\.m2\repository\com\google\guava\guava\21.0\guava-21.0.jar;C:\Users\phill\.m2\repository\com\google\code\gson\gson\2.8.0\gson-2.8.0.jar;C:\Users\phill\.m2\repository\net\md-5\bungeecord-chat\1.13-SNAPSHOT\bungeecord-chat-1.13-SNAPSHOT.jar;C:\Users\phill\.m2\repository\org\yaml\snakeyaml\1.25\snakeyaml-1.25.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\phill\AppData\Local\Temp\surefire14688874218863040350\surefirebooter2675838422010248490.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\phill\AppData\Local\Temp\surefire16188088509294471902\surefirebooter7359348699159625182.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.8+7"/>
