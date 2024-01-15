@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 
 import com.thefishnextdoor.dontpickup.PlayerTracker;
 
+import net.md_5.bungee.api.ChatColor;
+
 public class DontPickUp implements CommandExecutor, TabCompleter {
 
     @Override
@@ -45,14 +47,14 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("You must be a player to use this command.");
+            sender.sendMessage(ChatColor.RED + "You must be a player to use this command.");
             return true;
         }
 
         Player player = (Player) sender;
 
         if (args.length < 1) {
-            sender.sendMessage("You must specify a subcommand.");
+            sender.sendMessage(ChatColor.RED + "You must specify a subcommand.");
             return true;
         }
 
@@ -61,59 +63,59 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
         if (subCommand.equals("list")) {
             ArrayList<String> notPickingUp = getNotPickingUpAsStrings(player);
             if (notPickingUp.size() == 0) {
-                player.sendMessage("You are picking up all items.");
+                player.sendMessage(ChatColor.YELLOW + "You are picking up all items.");
                 return true;
             }
 
-            player.sendMessage("You are not picking up:");
+            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Blocked Items");
             for (String material : notPickingUp) {
-                player.sendMessage(material);
+                player.sendMessage(ChatColor.RESET + "- " + titleCase(material));
             }
             return true;
         }
         else if (subCommand.equals("remove")) {
             if (args.length < 2) {
-                player.sendMessage("You must specify a material name.");
+                player.sendMessage(ChatColor.RED + "You must specify a material name.");
                 return true;
             }
 
             String materialName = args[1];
             Material material = Material.matchMaterial(materialName);
             if (material == null) {
-                player.sendMessage("Invalid material name.");
+                player.sendMessage(ChatColor.RED + "Invalid material name.");
                 return true;
             }
 
             PlayerTracker.get(player).pickUp(material);
-            player.sendMessage("You are now picking up " + materialName + ".");
+            player.sendMessage(ChatColor.WHITE + "Now picking up " + titleCase(materialName) + ".");
             return true;
         }
         else if (subCommand.equals("add")) {
             if (args.length < 2) {
-                player.sendMessage("You must specify a material name.");
+                player.sendMessage(ChatColor.RED + "You must specify a material name.");
                 return true;
             }
 
             String materialName = args[1];
             Material material = Material.matchMaterial(materialName);
             if (material == null) {
-                player.sendMessage("Invalid material name.");
+                player.sendMessage(ChatColor.RED + "Invalid material name.");
                 return true;
             }
 
             PlayerTracker.get(player).dontPickUp(material);
-            player.sendMessage("You are no longer picking up " + materialName + ".");
+            player.sendMessage(ChatColor.WHITE + "No longer picking up " + titleCase(materialName) + ".");
             return true;
         }
 
-        player.sendMessage("Invalid subcommand.");
+        player.sendMessage(ChatColor.RED + "Invalid subcommand.");
         return true;
     }
 
     private static ArrayList<String> getNotPickingUpAsStrings(Player player) {
         ArrayList<String> notPickingUp = new ArrayList<>();
         for (Material material : PlayerTracker.get(player).notPickingUp()) {
-            notPickingUp.add(material.name());
+            notPickingUp.add(material.name().toLowerCase());
         }
         return notPickingUp;
     }
@@ -123,9 +125,19 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
         ArrayList<Material> notPickingUp = PlayerTracker.get(player).notPickingUp();
         for (Material material : Material.values()) {
             if (!notPickingUp.contains(material)) {
-                pickingUp.add(material.name());
+                pickingUp.add(material.name().toLowerCase());
             }
         }
         return pickingUp;
+    }
+
+    private static String titleCase(String str) {
+        str = str.replace("_", " ");
+        String[] words = str.split(" ");
+        String titleCase = "";
+        for (String word : words) {
+            titleCase += word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase() + " ";
+        }
+        return titleCase.trim();
     }
 }

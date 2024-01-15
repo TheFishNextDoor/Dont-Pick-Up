@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 public class PlayerTracker {
 
     private static ArrayList<TrackedPlayer> trackedPlayers = new ArrayList<>();
+    private static int autoSaveTaskId = -1;
 
     public static class TrackedPlayer {
 
@@ -42,7 +43,6 @@ public class PlayerTracker {
             if (dontPickUp.remove(material)) {
                 changes = true;
             }
-
         }
 
         public ArrayList<Material> notPickingUp() {
@@ -125,5 +125,18 @@ public class PlayerTracker {
         for (TrackedPlayer trackedPlayer : trackedPlayers) {
             trackedPlayer.save();
         }
+    }
+
+    public static void startASyncAutoSave() {
+        if (autoSaveTaskId != -1) {
+            return;
+        }
+        Plugin plugin = Plugin.getInstance();
+        autoSaveTaskId = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
+            @Override
+            public void run() {
+                saveAll();
+            }
+        }, 1200, 1200).getTaskId();
     }
 }

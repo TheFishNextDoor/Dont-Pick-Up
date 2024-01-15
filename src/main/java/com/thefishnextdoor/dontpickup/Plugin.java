@@ -27,12 +27,14 @@ public class Plugin extends JavaPlugin {
         pluginManager.registerEvents(new Quit(), this);
         pluginManager.registerEvents(new PickUp(), this);
 
-        LOGGER.info("dontpickup enabled");
+        PlayerTracker.startASyncAutoSave();
+
+        LOGGER.info("Plugin enabled");
     }
 
     public void onDisable() {
         PlayerTracker.saveAll();
-        LOGGER.info("dontpickup disabled");
+        LOGGER.info("Plugin disabled");
     }
 
     public static Plugin getInstance() {
