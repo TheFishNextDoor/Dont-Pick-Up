@@ -154,4 +154,10 @@ public class PlayerTracker {
             }
         }, 1200, 1200).getTaskId();
     }
+
+    public static void loadOnlinePlayers() {
+        for (Player player : Plugin.getInstance().getServer().getOnlinePlayers()) {
+            get(player);
+        }
+    }
 }

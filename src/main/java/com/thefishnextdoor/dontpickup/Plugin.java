@@ -29,6 +29,8 @@ public class Plugin extends JavaPlugin {
 
         PlayerTracker.startASyncAutoSave();
 
+        PlayerTracker.loadOnlinePlayers();
+
         LOGGER.info("Plugin enabled");
     }
 
