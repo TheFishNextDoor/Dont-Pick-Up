@@ -9,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import com.thefishnextdoor.dontpickup.PlayerTracker;
 
@@ -74,12 +75,21 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
             return true;
         }
         else if (subCommand.equals("remove")) {
+            String materialName;
             if (args.length < 2) {
-                player.sendMessage(ChatColor.RED + "You must specify a material name.");
-                return true;
+                ItemStack hand = player.getInventory().getItemInMainHand();
+                ItemStack offHand = player.getInventory().getItemInOffHand();
+                ItemStack item = hand.getType() == Material.AIR ? offHand : hand;
+                if (item.getType() == Material.AIR) {
+                    player.sendMessage(ChatColor.RED + "You must specify a material name.");
+                    return true;
+                }
+                materialName = item.getType().name();
+            }
+            else {
+                materialName = args[1];
             }
 
-            String materialName = args[1];
             Material material = Material.matchMaterial(materialName);
             if (material == null) {
                 player.sendMessage(ChatColor.RED + "Invalid material name.");
@@ -91,12 +101,21 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
             return true;
         }
         else if (subCommand.equals("add")) {
+            String materialName;
             if (args.length < 2) {
-                player.sendMessage(ChatColor.RED + "You must specify a material name.");
-                return true;
+                ItemStack hand = player.getInventory().getItemInMainHand();
+                ItemStack offHand = player.getInventory().getItemInOffHand();
+                ItemStack item = hand.getType() == Material.AIR ? offHand : hand;
+                if (item.getType() == Material.AIR) {
+                    player.sendMessage(ChatColor.RED + "You must specify a material name.");
+                    return true;
+                }
+                materialName = item.getType().name();
             }
-
-            String materialName = args[1];
+            else {
+                materialName = args[1];
+            }
+            
             Material material = Material.matchMaterial(materialName);
             if (material == null) {
                 player.sendMessage(ChatColor.RED + "Invalid material name.");

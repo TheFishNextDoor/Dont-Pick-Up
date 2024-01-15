@@ -25,7 +25,7 @@ public class PlayerTracker {
         public TrackedPlayer(Player player) {
             this.id = player.getUniqueId();
             trackedPlayers.add(this);
-            load();
+            loadAsync();
         }
 
         public boolean is(Player player) {
@@ -50,8 +50,14 @@ public class PlayerTracker {
         }
 
         public void saveAndClose() {
-            save();
-            trackedPlayers.remove(this);
+            final TrackedPlayer thisPlayer = this;
+            Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    save();
+                    trackedPlayers.remove(thisPlayer);
+                }
+            });
         }
 
         public void save() {
@@ -78,6 +84,15 @@ public class PlayerTracker {
             finally {
                 changes = false;
             }
+        }
+
+        private void loadAsync() {
+            Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    load();
+                }
+            });
         }
 
         private void load() {
