@@ -45,6 +45,13 @@ public class PlayerTracker {
             }
         }
 
+        public void pickUpAll() {
+            if (!dontPickUp.isEmpty()) {
+                dontPickUp.clear();
+                changes = true;
+            }
+        }
+
         public ArrayList<Material> notPickingUp() {
             return dontPickUp;
         }

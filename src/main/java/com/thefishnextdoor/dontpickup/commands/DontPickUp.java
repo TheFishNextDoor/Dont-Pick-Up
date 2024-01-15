@@ -38,7 +38,9 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
                 return getPickingUpAsString(player);
             }
             else if (subCommand.equals("remove")) {
-                return getNotPickingUpAsStrings(player);
+                ArrayList<String> notPickingUp = getNotPickingUpAsStrings(player);
+                notPickingUp.add("all");
+                return notPickingUp;
             }
         }
 
@@ -60,6 +62,7 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
             player.sendMessage(ChatColor.RED + "/dontpickup add [material] " + ChatColor.WHITE + "Disable picking up the specified material");
             player.sendMessage(ChatColor.RED + "/dontpickup remove " + ChatColor.WHITE + "Enable picking up the item in your hand");
             player.sendMessage(ChatColor.RED + "/dontpickup remove [material] " + ChatColor.WHITE + "Enable picking up the specified material");
+            player.sendMessage(ChatColor.RED + "/dontpickup remove all " + ChatColor.WHITE + "Enable picking up all items");
             player.sendMessage(ChatColor.RED + "/dontpickup list " + ChatColor.WHITE + "List all items you are not picking up");
             return true;
         }
@@ -93,6 +96,12 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
             }
             else {
                 materialName = args[1];
+            }
+
+            if (materialName.equalsIgnoreCase("all")) {
+                PlayerTracker.get(player).pickUpAll();
+                player.sendMessage(ChatColor.WHITE + "Now picking up all items.");
+                return true;
             }
 
             Material material = Material.matchMaterial(materialName);
