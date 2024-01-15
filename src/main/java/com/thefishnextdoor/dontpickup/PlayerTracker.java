@@ -19,6 +19,7 @@ public class PlayerTracker {
 
         private final UUID id;
         private ArrayList<Material> dontPickUp = new ArrayList<>();
+        private boolean changes = false;
 
         public TrackedPlayer(Player player) {
             this.id = player.getUniqueId();
@@ -33,11 +34,15 @@ public class PlayerTracker {
         public void dontPickUp(Material material) {
             if (!dontPickUp.contains(material)) {
                 dontPickUp.add(material);
+                changes = true;
             }
         }
 
         public void pickUp(Material material) {
-            dontPickUp.remove(material);
+            if (dontPickUp.remove(material)) {
+                changes = true;
+            }
+
         }
 
         public ArrayList<Material> notPickingUp() {
@@ -50,6 +55,10 @@ public class PlayerTracker {
         }
 
         public void save() {
+            if (!changes) {
+                return;
+            }
+
             File playerFile = getPlayerFile();
             FileConfiguration config = YamlConfiguration.loadConfiguration(playerFile);
             
@@ -66,6 +75,9 @@ public class PlayerTracker {
             catch (IOException e) {
                 e.printStackTrace();
             }
+            finally {
+                changes = false;
+            }
         }
 
         private void load() {
@@ -77,7 +89,7 @@ public class PlayerTracker {
             FileConfiguration config = YamlConfiguration.loadConfiguration(playerFile);
             dontPickUp.clear();
 
-            List<String> materialNames = config.getStringList("dontPickUp");
+            List<String> materialNames = config.getStringList("DontPickUpMaterials");
             for (String name : materialNames) {
                 Material material = Material.matchMaterial(name);
                 if (material != null) {
