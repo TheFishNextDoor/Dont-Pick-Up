@@ -111,7 +111,7 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
             }
 
             PlayerTracker.get(player).pickUp(material);
-            player.sendMessage(ChatColor.WHITE + "Now picking up " + titleCase(materialName) + ".");
+            player.sendMessage(ChatColor.WHITE + "Now picking up " + materialName.toLowerCase().replaceAll("_", " ") + ".");
             return true;
         }
         else if (subCommand.equals("add")) {
@@ -137,7 +137,7 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
             }
 
             PlayerTracker.get(player).dontPickUp(material);
-            player.sendMessage(ChatColor.WHITE + "No longer picking up " + titleCase(materialName) + ".");
+            player.sendMessage(ChatColor.WHITE + "No longer picking up " + materialName.toLowerCase().replaceAll("_", " ") + ".");
             return true;
         }
 
