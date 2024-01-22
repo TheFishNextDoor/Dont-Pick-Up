@@ -3,9 +3,9 @@ package com.thefishnextdoor.dontpickup;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 
 public class PlayerTracker {
 
-    private static HashMap<UUID, TrackedPlayer> trackedPlayers = new HashMap<UUID, TrackedPlayer>();
+    private static ConcurrentHashMap<UUID, TrackedPlayer> trackedPlayers = new ConcurrentHashMap<UUID, TrackedPlayer>();
     
 
     public static class TrackedPlayer {
