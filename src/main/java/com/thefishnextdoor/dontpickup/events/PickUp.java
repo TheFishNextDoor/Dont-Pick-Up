@@ -1,5 +1,6 @@
 package com.thefishnextdoor.dontpickup.events;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +19,8 @@ public class PickUp implements Listener {
         }
 
         TrackedPlayer trackedPlayer = PlayerTracker.get((Player) entity);
-        if (trackedPlayer.notPickingUp().contains(event.getItem().getItemStack().getType())) {
+        Material material = event.getItem().getItemStack().getType();
+        if (!trackedPlayer.canPickUp(material)) {
             event.setCancelled(true);
         }
     }    

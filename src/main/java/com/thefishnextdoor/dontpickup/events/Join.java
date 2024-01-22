@@ -10,6 +10,6 @@ public class Join implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        PlayerTracker.get(event.getPlayer());
+        PlayerTracker.preLoad(event.getPlayer());
     }
 }

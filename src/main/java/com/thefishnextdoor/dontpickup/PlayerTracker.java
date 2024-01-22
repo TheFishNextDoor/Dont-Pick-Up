@@ -3,6 +3,7 @@ package com.thefishnextdoor.dontpickup;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,8 +14,8 @@ import org.bukkit.entity.Player;
 
 public class PlayerTracker {
 
-    private static ArrayList<TrackedPlayer> trackedPlayers = new ArrayList<>();
-    private static int autoSaveTaskId = -1;
+    private static HashMap<UUID, TrackedPlayer> trackedPlayers = new HashMap<UUID, TrackedPlayer>();
+    
 
     public static class TrackedPlayer {
 
@@ -24,12 +25,12 @@ public class PlayerTracker {
 
         public TrackedPlayer(Player player) {
             this.id = player.getUniqueId();
-            trackedPlayers.add(this);
-            loadAsync();
+            load();
+            trackedPlayers.put(this.id, this);
         }
 
-        public boolean is(Player player) {
-            return player.getUniqueId().equals(id);
+        public boolean canPickUp(Material material) {
+            return !dontPickUp.contains(material);
         }
 
         public void dontPickUp(Material material) {
@@ -52,58 +53,8 @@ public class PlayerTracker {
             }
         }
 
-        public ArrayList<Material> notPickingUp() {
-            return dontPickUp;
-        }
-
-        public void saveAndClose() {
-            final TrackedPlayer thisPlayer = this;
-            Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
-                @Override
-                public void run() {
-                    save();
-                    trackedPlayers.remove(thisPlayer);
-                }
-            });
-        }
-
-        public void save() {
-            if (!changes) {
-                return;
-            }
-
-            File playerFile = getPlayerFile();
-            FileConfiguration config = YamlConfiguration.loadConfiguration(playerFile);
-            
-            ArrayList<String> materialNames = new ArrayList<>();
-            for (Material material : dontPickUp) {
-                materialNames.add(material.name());
-            }
-
-            config.set("DontPickUpMaterials", materialNames);
-
-            try {
-                config.save(playerFile);
-            } 
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-            finally {
-                changes = false;
-            }
-        }
-
-        private void loadAsync() {
-            Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
-                @Override
-                public void run() {
-                    load();
-                }
-            });
-        }
-
         private void load() {
-            File playerFile = getPlayerFile();
+            File playerFile = FileSystem.getPlayerFile(id);
             if (!playerFile.exists()) {
                 return;
             }
@@ -111,7 +62,7 @@ public class PlayerTracker {
             FileConfiguration config = YamlConfiguration.loadConfiguration(playerFile);
             dontPickUp.clear();
 
-            List<String> materialNames = config.getStringList("DontPickUpMaterials");
+            List<String> materialNames = config.getStringList("BlockedMaterials");
             for (String name : materialNames) {
                 Material material = Material.matchMaterial(name);
                 if (material != null) {
@@ -120,51 +71,63 @@ public class PlayerTracker {
             }
         }
 
-        private File getPlayerFile() {
-            return new File(FileSystem.getDataFolder(), id + ".yml");
+        private void save() {
+            if (changes) {
+                File playerFile = FileSystem.getPlayerFile(id);
+                FileConfiguration config = YamlConfiguration.loadConfiguration(playerFile);
+                
+                ArrayList<String> materialNames = new ArrayList<>();
+                for (Material material : dontPickUp) {
+                    materialNames.add(material.name());
+                }
+    
+                config.set("BlockedMaterials", materialNames);
+    
+                try {
+                    config.save(playerFile);
+                } 
+                catch (IOException e) {
+                    Plugin.LOGGER.severe("Failed to save player data for " + id + ".");
+                    e.printStackTrace();
+                }
+                finally {
+                    changes = false;
+                }
+            }
+
+            if (!changes && !isOnline()) {
+                trackedPlayers.remove(id);
+            }
+        }
+
+        private boolean isOnline() {
+            return Plugin.getInstance().getServer().getPlayer(id) != null;
         }
     }
 
     public static TrackedPlayer get(Player player) {
-        for (TrackedPlayer trackedPlayer : trackedPlayers) {
-            if (trackedPlayer.is(player)) {
-                return trackedPlayer;
-            }
+        TrackedPlayer trackedPlayer = trackedPlayers.get(player.getUniqueId());
+        if (trackedPlayer == null) {
+            new TrackedPlayer(player);
         }
-        return new TrackedPlayer(player);
+        return trackedPlayer;
     }
 
-    public static void remove(Player player) {
-        for (TrackedPlayer trackedPlayer : trackedPlayers) {
-            if (trackedPlayer.is(player)) {
-                trackedPlayer.saveAndClose();
-                return;
+    public static void preLoad(final Player player) {
+        Plugin plugin = Plugin.getInstance();
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+
+            @Override
+            public void run() {
+                get(player);
             }
-        }
+
+        });
     }
 
     public static void saveAll() {
-        for (TrackedPlayer trackedPlayer : trackedPlayers) {
+        for (TrackedPlayer trackedPlayer : trackedPlayers.values()) {
             trackedPlayer.save();
-        }
-    }
-
-    public static void startASyncAutoSave() {
-        if (autoSaveTaskId != -1) {
-            return;
-        }
-        Plugin plugin = Plugin.getInstance();
-        autoSaveTaskId = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
-            @Override
-            public void run() {
-                saveAll();
-            }
-        }, 1200, 1200).getTaskId();
-    }
-
-    public static void loadOnlinePlayers() {
-        for (Player player : Plugin.getInstance().getServer().getOnlinePlayers()) {
-            get(player);
         }
     }
 }

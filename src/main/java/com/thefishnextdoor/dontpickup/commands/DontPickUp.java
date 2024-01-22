@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.thefishnextdoor.dontpickup.PlayerTracker;
+import com.thefishnextdoor.dontpickup.PlayerTracker.TrackedPlayer;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -35,10 +36,10 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
         else if (args.length >= 2) {
             String subCommand = args[0];
             if (subCommand.equals("add")) {
-                return getPickingUpAsString(player);
+                return getAllowedMaterialsAsStrings(player);
             }
             else if (subCommand.equals("remove")) {
-                ArrayList<String> notPickingUp = getNotPickingUpAsStrings(player);
+                ArrayList<String> notPickingUp = getBlockedMaterialsAsStrings(player);
                 notPickingUp.add("all");
                 return notPickingUp;
             }
@@ -70,7 +71,7 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
         String subCommand = args[0];
 
         if (subCommand.equals("list")) {
-            ArrayList<String> notPickingUp = getNotPickingUpAsStrings(player);
+            ArrayList<String> notPickingUp = getBlockedMaterialsAsStrings(player);
             if (notPickingUp.size() == 0) {
                 player.sendMessage(ChatColor.YELLOW + "You are picking up all items.");
                 return true;
@@ -83,19 +84,10 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
             return true;
         }
         else if (subCommand.equals("remove")) {
-            String materialName;
-            if (args.length < 2) {
-                ItemStack hand = player.getInventory().getItemInMainHand();
-                ItemStack offHand = player.getInventory().getItemInOffHand();
-                ItemStack item = hand.getType() == Material.AIR ? offHand : hand;
-                if (item.getType() == Material.AIR) {
-                    player.sendMessage(ChatColor.RED + "You must specify a material name.");
-                    return true;
-                }
-                materialName = item.getType().name();
-            }
-            else {
-                materialName = args[1];
+            String materialName = materialName(player, args);
+            if (materialName == null) {
+                player.sendMessage(ChatColor.RED + "You must specify a material name.");
+                return true;
             }
 
             if (materialName.equalsIgnoreCase("all")) {
@@ -115,19 +107,10 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
             return true;
         }
         else if (subCommand.equals("add")) {
-            String materialName;
-            if (args.length < 2) {
-                ItemStack hand = player.getInventory().getItemInMainHand();
-                ItemStack offHand = player.getInventory().getItemInOffHand();
-                ItemStack item = hand.getType() == Material.AIR ? offHand : hand;
-                if (item.getType() == Material.AIR) {
-                    player.sendMessage(ChatColor.RED + "You must specify a material name.");
-                    return true;
-                }
-                materialName = item.getType().name();
-            }
-            else {
-                materialName = args[1];
+            String materialName = materialName(player, args);
+            if (materialName == null) {
+                player.sendMessage(ChatColor.RED + "You must specify a material name.");
+                return true;
             }
             
             Material material = Material.matchMaterial(materialName);
@@ -145,23 +128,41 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    private static ArrayList<String> getNotPickingUpAsStrings(Player player) {
-        ArrayList<String> notPickingUp = new ArrayList<>();
-        for (Material material : PlayerTracker.get(player).notPickingUp()) {
-            notPickingUp.add(material.name().toLowerCase());
+    private static String materialName(Player player, String[] args) {
+        if (args.length < 2) {
+            ItemStack hand = player.getInventory().getItemInMainHand();
+            ItemStack offHand = player.getInventory().getItemInOffHand();
+            ItemStack item = hand.getType() == Material.AIR ? offHand : hand;
+            if (item.getType() == Material.AIR) {
+                return null;
+            }
+            return item.getType().name();
         }
-        return notPickingUp;
+        else {
+            return args[1];
+        }
     }
 
-    private static ArrayList<String> getPickingUpAsString(Player player) {
-        ArrayList<String> pickingUp = new ArrayList<>();
-        ArrayList<Material> notPickingUp = PlayerTracker.get(player).notPickingUp();
+    private static ArrayList<String> getBlockedMaterialsAsStrings(Player player) {
+        ArrayList<String> blocked = new ArrayList<>();
+        TrackedPlayer trackedPlayer = PlayerTracker.get(player);
         for (Material material : Material.values()) {
-            if (!notPickingUp.contains(material)) {
-                pickingUp.add(material.name().toLowerCase());
+            if (!trackedPlayer.canPickUp(material)) {
+                blocked.add(material.name().toLowerCase());
             }
         }
-        return pickingUp;
+        return blocked;
+    }
+
+    private static ArrayList<String> getAllowedMaterialsAsStrings(Player player) {
+        ArrayList<String> allowed = new ArrayList<>();
+        TrackedPlayer trackedPlayer = PlayerTracker.get(player);
+        for (Material material : Material.values()) {
+            if (trackedPlayer.canPickUp(material)) {
+                allowed.add(material.name().toLowerCase());
+            }
+        }
+        return allowed;
     }
 
     private static String titleCase(String str) {

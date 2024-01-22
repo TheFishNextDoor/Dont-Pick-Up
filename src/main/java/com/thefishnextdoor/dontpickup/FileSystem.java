@@ -1,6 +1,7 @@
 package com.thefishnextdoor.dontpickup;
 
 import java.io.File;
+import java.util.UUID;
 
 public class FileSystem {
 
@@ -20,5 +21,9 @@ public class FileSystem {
 
     public static File getDataFolder() {
         return dataFolder;
+    }
+
+    public static File getPlayerFile(UUID id) {
+        return new File(dataFolder, id.toString() + ".yml");
     }
 }
