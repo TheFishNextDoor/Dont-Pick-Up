@@ -3,6 +3,7 @@ package com.thefishnextdoor.dontpickup;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +21,7 @@ public class PlayerTracker {
     public static class TrackedPlayer {
 
         private final UUID id;
-        private ArrayList<Material> dontPickUp = new ArrayList<>();
+        private HashSet<Material> dontPickUp = new HashSet<>();
         private boolean changes = false;
 
         public TrackedPlayer(Player player) {
