@@ -87,7 +87,7 @@ public class PlayerTracker {
                     config.save(playerFile);
                 } 
                 catch (IOException e) {
-                    Plugin.LOGGER.severe("Failed to save player data for " + id + ".");
+                    Plugin.getInstance().LOGGER.severe("Failed to save player data for " + id + ".");
                     e.printStackTrace();
                 }
                 finally {

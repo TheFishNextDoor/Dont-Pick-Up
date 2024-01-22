@@ -10,7 +10,7 @@ import com.thefishnextdoor.dontpickup.events.PickUp;
 
 public class Plugin extends JavaPlugin {
 
-    public static final Logger LOGGER = Logger.getLogger("Don't Pickup");
+    public final Logger LOGGER = Logger.getLogger(getName());
 
     private static Plugin instance;
 
