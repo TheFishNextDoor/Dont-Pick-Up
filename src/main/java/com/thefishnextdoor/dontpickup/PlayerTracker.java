@@ -107,10 +107,7 @@ public class PlayerTracker {
 
     public static TrackedPlayer get(Player player) {
         TrackedPlayer trackedPlayer = trackedPlayers.get(player.getUniqueId());
-        if (trackedPlayer == null) {
-            new TrackedPlayer(player);
-        }
-        return trackedPlayer;
+        return trackedPlayer != null ? trackedPlayer : new TrackedPlayer(player);
     }
 
     public static void preLoad(final Player player) {
