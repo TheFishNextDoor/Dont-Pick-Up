@@ -1,4 +1,4 @@
-package com.thefishnextdoor.dontpickup.events;
+package com.thefishnextdoor.dontpickup.event;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;

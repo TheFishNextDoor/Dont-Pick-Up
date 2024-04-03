@@ -1,4 +1,4 @@
-package com.thefishnextdoor.dontpickup.commands;
+package com.thefishnextdoor.dontpickup.command;
 
 import java.util.ArrayList;
 import java.util.List;

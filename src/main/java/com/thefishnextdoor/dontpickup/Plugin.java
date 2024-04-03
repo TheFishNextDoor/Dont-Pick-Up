@@ -4,9 +4,9 @@ import java.util.logging.Logger;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.thefishnextdoor.dontpickup.commands.DontPickUp;
-import com.thefishnextdoor.dontpickup.events.Join;
-import com.thefishnextdoor.dontpickup.events.PickUp;
+import com.thefishnextdoor.dontpickup.command.DontPickUp;
+import com.thefishnextdoor.dontpickup.event.Join;
+import com.thefishnextdoor.dontpickup.event.PickUp;
 
 public class Plugin extends JavaPlugin {
 
