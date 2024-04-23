@@ -53,7 +53,7 @@ public class TrackedPlayer {
     }
 
     private void load() {
-        File playerFile = FileSystem.getPlayerFile(id);
+        File playerFile = getPlayerFile();
         if (!playerFile.exists()) {
             return;
         }
@@ -72,7 +72,7 @@ public class TrackedPlayer {
 
     private void save() {
         if (changes) {
-            File playerFile = FileSystem.getPlayerFile(id);
+            File playerFile = getPlayerFile();
             FileConfiguration config = YamlConfiguration.loadConfiguration(playerFile);
             
             ArrayList<String> materialNames = new ArrayList<>();
@@ -103,6 +103,10 @@ public class TrackedPlayer {
         return DontPickUp.getInstance().getServer().getPlayer(id) != null;
     }
 
+    private File getPlayerFile() {
+        return new File(getPlayerDataFolder(), id.toString() + ".yml");
+    }
+
     public static TrackedPlayer get(Player player) {
         TrackedPlayer trackedPlayer = trackedPlayers.get(player.getUniqueId());
         return trackedPlayer != null ? trackedPlayer : new TrackedPlayer(player);
@@ -124,5 +128,19 @@ public class TrackedPlayer {
         for (TrackedPlayer trackedPlayer : trackedPlayers.values()) {
             trackedPlayer.save();
         }
+    }
+
+    private static File getPlayerDataFolder() {
+        File pluginFolder = DontPickUp.getInstance().getDataFolder();
+        if (!pluginFolder.exists()) {
+            pluginFolder.mkdirs();
+        }
+
+        File dataFolder = new File(pluginFolder, "data");
+        if (!dataFolder.exists()) {
+            dataFolder.mkdirs();
+        }
+
+        return dataFolder;
     }
 }

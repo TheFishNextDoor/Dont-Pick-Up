@@ -1,4 +1,5 @@
 package com.thefishnextdoor.dontpickup;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,9 +14,10 @@ public class DontPickUp extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        FileSystem.setup(this);
-
-        getCommand("dontpickup").setExecutor(new DPU());
+        DPU dpu = new DPU();
+        PluginCommand dpuCommand = getCommand("dontpickup");
+        dpuCommand.setExecutor(dpu);
+        dpuCommand.setTabCompleter(dpu);
 
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new Join(), this);
