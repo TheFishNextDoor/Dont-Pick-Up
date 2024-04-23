@@ -1,25 +1,21 @@
 package com.thefishnextdoor.dontpickup;
-import java.util.logging.Logger;
-
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.thefishnextdoor.dontpickup.command.DontPickUp;
+import com.thefishnextdoor.dontpickup.command.DPU;
 import com.thefishnextdoor.dontpickup.event.Join;
 import com.thefishnextdoor.dontpickup.event.PickUp;
 
-public class Plugin extends JavaPlugin {
+public class DontPickUp extends JavaPlugin {
 
-    public final Logger LOGGER = Logger.getLogger(getName());
-
-    private static Plugin instance;
+    private static DontPickUp instance;
 
     public void onEnable() {
         instance = this;
 
         FileSystem.setup(this);
 
-        getCommand("dontpickup").setExecutor(new DontPickUp());
+        getCommand("dontpickup").setExecutor(new DPU());
 
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new Join(), this);
@@ -27,16 +23,16 @@ public class Plugin extends JavaPlugin {
 
         AutoSave.start();
 
-        LOGGER.info("Plugin enabled");
+        getLogger().info("Plugin enabled");
     }
 
     public void onDisable() {
         AutoSave.stop();
-        PlayerTracker.saveAll();
-        LOGGER.info("Plugin disabled");
+        TrackedPlayer.saveAll();
+        getLogger().info("Plugin disabled");
     }
 
-    public static Plugin getInstance() {
+    public static DontPickUp getInstance() {
         return instance;
     }
 }

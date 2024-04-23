@@ -11,12 +11,11 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.thefishnextdoor.dontpickup.PlayerTracker;
-import com.thefishnextdoor.dontpickup.PlayerTracker.TrackedPlayer;
+import com.thefishnextdoor.dontpickup.TrackedPlayer;
 
 import net.md_5.bungee.api.ChatColor;
 
-public class DontPickUp implements CommandExecutor, TabCompleter {
+public class DPU implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
@@ -27,18 +26,14 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
         Player player = (Player) sender;
 
         if (args.length == 1) {
-            ArrayList<String> subCommands = new ArrayList<>();
-            subCommands.add("add");
-            subCommands.add("remove");
-            subCommands.add("list");
-            return subCommands;
+            return List.of("add", "remove", "list");
         }
         else if (args.length >= 2) {
             String subCommand = args[0];
-            if (subCommand.equals("add")) {
+            if (subCommand.equalsIgnoreCase("add")) {
                 return getAllowedMaterialsAsStrings(player);
             }
-            else if (subCommand.equals("remove")) {
+            else if (subCommand.equalsIgnoreCase("remove")) {
                 ArrayList<String> notPickingUp = getBlockedMaterialsAsStrings(player);
                 notPickingUp.add("all");
                 return notPickingUp;
@@ -91,7 +86,7 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
             }
 
             if (materialName.equalsIgnoreCase("all")) {
-                PlayerTracker.get(player).pickUpAll();
+                TrackedPlayer.get(player).pickUpAll();
                 player.sendMessage(ChatColor.WHITE + "Now picking up all items.");
                 return true;
             }
@@ -102,7 +97,7 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            PlayerTracker.get(player).pickUp(material);
+            TrackedPlayer.get(player).pickUp(material);
             player.sendMessage(ChatColor.WHITE + "Now picking up " + materialName.toLowerCase().replaceAll("_", " ") + ".");
             return true;
         }
@@ -119,7 +114,7 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            PlayerTracker.get(player).dontPickUp(material);
+            TrackedPlayer.get(player).dontPickUp(material);
             player.sendMessage(ChatColor.WHITE + "No longer picking up " + materialName.toLowerCase().replaceAll("_", " ") + ".");
             return true;
         }
@@ -145,7 +140,7 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
 
     private static ArrayList<String> getBlockedMaterialsAsStrings(Player player) {
         ArrayList<String> blocked = new ArrayList<>();
-        TrackedPlayer trackedPlayer = PlayerTracker.get(player);
+        TrackedPlayer trackedPlayer = TrackedPlayer.get(player);
         for (Material material : Material.values()) {
             if (!trackedPlayer.canPickUp(material)) {
                 blocked.add(material.name().toLowerCase());
@@ -156,7 +151,7 @@ public class DontPickUp implements CommandExecutor, TabCompleter {
 
     private static ArrayList<String> getAllowedMaterialsAsStrings(Player player) {
         ArrayList<String> allowed = new ArrayList<>();
-        TrackedPlayer trackedPlayer = PlayerTracker.get(player);
+        TrackedPlayer trackedPlayer = TrackedPlayer.get(player);
         for (Material material : Material.values()) {
             if (trackedPlayer.canPickUp(material)) {
                 allowed.add(material.name().toLowerCase());

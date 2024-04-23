@@ -7,7 +7,7 @@ public class FileSystem {
 
     private static File dataFolder;
 
-    public static void setup(Plugin plugin) {
+    public static void setup(DontPickUp plugin) {
         File pluginFolder = plugin.getDataFolder();
         if (!pluginFolder.exists()) {
             pluginFolder.mkdirs();
