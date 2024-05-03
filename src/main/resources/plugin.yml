@@ -1,6 +1,6 @@
 name: DontPickUp
 main: com.thefishnextdoor.dontpickup.Plugin
-version: 0.0.1
+version: 1.1.0
 api-version: 1.15
 authors: ["TheFishNextDoor"]
 description: DontPickUp by TheFishNextDoor
