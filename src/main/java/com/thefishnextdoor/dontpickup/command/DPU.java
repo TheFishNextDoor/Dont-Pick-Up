@@ -52,8 +52,9 @@ public class DPU implements CommandExecutor, TabCompleter {
 
         Player player = (Player) sender;
 
-        if (args.length < 1) {
+        if (args.length < 1 || args[0].equalsIgnoreCase("help")) {
             player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "DontPickUp");
+            player.sendMessage(ChatColor.RED + "/dontpickup help " + ChatColor.WHITE + "Show this help message");
             player.sendMessage(ChatColor.RED + "/dontpickup add " + ChatColor.WHITE + "Disable picking up the item in your hand");
             player.sendMessage(ChatColor.RED + "/dontpickup add [material] " + ChatColor.WHITE + "Disable picking up the specified material");
             player.sendMessage(ChatColor.RED + "/dontpickup remove " + ChatColor.WHITE + "Enable picking up the item in your hand");
