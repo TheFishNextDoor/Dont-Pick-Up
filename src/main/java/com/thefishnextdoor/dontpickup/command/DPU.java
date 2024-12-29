@@ -11,9 +11,9 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.thefishnextdoor.dontpickup.DontPickUp;
+import com.thefishnextdoor.dontpickup.Language;
 import com.thefishnextdoor.dontpickup.TrackedPlayer;
-
-import net.md_5.bungee.api.ChatColor;
 
 public class DPU implements CommandExecutor, TabCompleter {
 
@@ -45,22 +45,17 @@ public class DPU implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        Language language = DontPickUp.getLanguage();
+
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "You must be a player to use this command.");
+            Language.sendMessage(sender, language.MUST_BE_PLAYER);
             return true;
         }
 
         Player player = (Player) sender;
 
         if (args.length < 1 || args[0].equalsIgnoreCase("help")) {
-            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "DontPickUp");
-            player.sendMessage(ChatColor.RED + "/dontpickup help " + ChatColor.WHITE + "Show this help message");
-            player.sendMessage(ChatColor.RED + "/dontpickup add " + ChatColor.WHITE + "Disable picking up the item in your hand");
-            player.sendMessage(ChatColor.RED + "/dontpickup add [material] " + ChatColor.WHITE + "Disable picking up the specified material");
-            player.sendMessage(ChatColor.RED + "/dontpickup remove " + ChatColor.WHITE + "Enable picking up the item in your hand");
-            player.sendMessage(ChatColor.RED + "/dontpickup remove [material] " + ChatColor.WHITE + "Enable picking up the specified material");
-            player.sendMessage(ChatColor.RED + "/dontpickup remove all " + ChatColor.WHITE + "Enable picking up all items");
-            player.sendMessage(ChatColor.RED + "/dontpickup list " + ChatColor.WHITE + "List all items you are not picking up");
+            Language.sendMessage(player, language.HELP);
             return true;
         }
 
@@ -69,58 +64,61 @@ public class DPU implements CommandExecutor, TabCompleter {
         if (subCommand.equals("list")) {
             ArrayList<String> notPickingUp = getBlockedMaterialsAsStrings(player);
             if (notPickingUp.size() == 0) {
-                player.sendMessage(ChatColor.YELLOW + "You are picking up all items.");
+                Language.sendMessage(player, language.LIST_EMPTY);
                 return true;
             }
 
-            player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Blocked Items");
+            Language.sendMessage(player, language.BLOCKED_MATERIALS_HEADER);
             for (String material : notPickingUp) {
-                player.sendMessage(ChatColor.RESET + "- " + titleCase(material));
+                String materialNameFormatted = titleCase(material);
+                Language.sendMessage(player, Language.replaceVariable(language.BLOCKED_MATERIALS_MATERIAL, "<material>", materialNameFormatted));
             }
             return true;
         }
         else if (subCommand.equals("remove")) {
             String materialName = materialName(player, args);
             if (materialName == null) {
-                player.sendMessage(ChatColor.RED + "You must specify a material name.");
+                Language.sendMessage(player, language.MISSING_MATERIAL);
                 return true;
             }
 
             if (materialName.equalsIgnoreCase("all")) {
                 TrackedPlayer.get(player).pickUpAll();
-                player.sendMessage(ChatColor.WHITE + "Now picking up all items.");
+                Language.sendMessage(player, language.PICK_UP_ALL);
                 return true;
             }
 
             Material material = Material.matchMaterial(materialName);
             if (material == null) {
-                player.sendMessage(ChatColor.RED + "Invalid material name.");
+                Language.sendMessage(player, language.INVALID_MATERIAL);
                 return true;
             }
 
             TrackedPlayer.get(player).pickUp(material);
-            player.sendMessage(ChatColor.WHITE + "Now picking up " + materialName.toLowerCase().replaceAll("_", " ") + ".");
+            String materialNameFormatted = materialName.toLowerCase().replaceAll("_", " ");
+            Language.sendMessage(player, Language.replaceVariable(language.PICK_UP_MATERIAL, "<material>", materialNameFormatted));
             return true;
         }
         else if (subCommand.equals("add")) {
             String materialName = materialName(player, args);
             if (materialName == null) {
-                player.sendMessage(ChatColor.RED + "You must specify a material name.");
+                Language.sendMessage(player, language.MISSING_MATERIAL);
                 return true;
             }
             
             Material material = Material.matchMaterial(materialName);
             if (material == null) {
-                player.sendMessage(ChatColor.RED + "Invalid material name.");
+                Language.sendMessage(player, language.INVALID_MATERIAL);
                 return true;
             }
 
             TrackedPlayer.get(player).dontPickUp(material);
-            player.sendMessage(ChatColor.WHITE + "No longer picking up " + materialName.toLowerCase().replaceAll("_", " ") + ".");
+            String materialNameFormatted = materialName.toLowerCase().replaceAll("_", " ");
+            Language.sendMessage(player, Language.replaceVariable(language.DONT_PICKUP_MATERIAL, "<material>", materialNameFormatted));
             return true;
         }
 
-        player.sendMessage(ChatColor.RED + "Invalid subcommand.");
+        Language.sendMessage(player, language.INVALID_COMMAND);
         return true;
     }
 

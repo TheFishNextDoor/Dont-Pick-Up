@@ -11,8 +11,12 @@ public class DontPickUp extends JavaPlugin {
 
     private static DontPickUp instance;
 
+    private static Language language;
+
     public void onEnable() {
         instance = this;
+
+        loadConfigs();
 
         DPU dpu = new DPU();
         PluginCommand dpuCommand = getCommand("dontpickup");
@@ -34,7 +38,15 @@ public class DontPickUp extends JavaPlugin {
         getLogger().info("Plugin disabled");
     }
 
+    public static void loadConfigs() {
+        language = new Language(instance);
+    }
+
     public static DontPickUp getInstance() {
         return instance;
+    }
+
+    public static Language getLanguage() {
+        return language;
     }
 }

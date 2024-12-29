@@ -1,7 +1,5 @@
 package com.thefishnextdoor.dontpickup;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,9 +7,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+
+import com.thefishnextdoor.dontpickup.file.DataFile;
 
 public class TrackedPlayer {
 
@@ -53,15 +52,11 @@ public class TrackedPlayer {
     }
 
     private void load() {
-        File playerFile = getPlayerFile();
-        if (!playerFile.exists()) {
-            return;
-        }
+        YamlConfiguration playerFile = getPlayerFile();
 
-        FileConfiguration config = YamlConfiguration.loadConfiguration(playerFile);
         dontPickUp.clear();
 
-        List<String> materialNames = config.getStringList("BlockedMaterials");
+        List<String> materialNames = playerFile.getStringList("BlockedMaterials");
         for (String name : materialNames) {
             Material material = Material.matchMaterial(name);
             if (material != null) {
@@ -72,24 +67,16 @@ public class TrackedPlayer {
 
     private void save() {
         if (changes) {
-            File playerFile = getPlayerFile();
-            FileConfiguration config = YamlConfiguration.loadConfiguration(playerFile);
+            YamlConfiguration playerFile = getPlayerFile();
             
             ArrayList<String> materialNames = new ArrayList<>();
             for (Material material : dontPickUp) {
                 materialNames.add(material.name());
             }
 
-            config.set("BlockedMaterials", materialNames);
+            playerFile.set("BlockedMaterials", materialNames);
 
-            try {
-                config.save(playerFile);
-            } 
-            catch (IOException e) {
-                DontPickUp.getInstance().getLogger().severe("Failed to save player data for " + id + ".");
-                e.printStackTrace();
-            }
-            finally {
+            if (DataFile.save(id.toString(), playerFile)) {
                 changes = false;
             }
         }
@@ -103,8 +90,8 @@ public class TrackedPlayer {
         return DontPickUp.getInstance().getServer().getPlayer(id) != null;
     }
 
-    private File getPlayerFile() {
-        return new File(getPlayerDataFolder(), id.toString() + ".yml");
+    private YamlConfiguration getPlayerFile() {
+        return DataFile.get(id.toString());
     }
 
     public static TrackedPlayer get(Player player) {
@@ -128,19 +115,5 @@ public class TrackedPlayer {
         for (TrackedPlayer trackedPlayer : trackedPlayers.values()) {
             trackedPlayer.save();
         }
-    }
-
-    private static File getPlayerDataFolder() {
-        File pluginFolder = DontPickUp.getInstance().getDataFolder();
-        if (!pluginFolder.exists()) {
-            pluginFolder.mkdirs();
-        }
-
-        File dataFolder = new File(pluginFolder, "data");
-        if (!dataFolder.exists()) {
-            dataFolder.mkdirs();
-        }
-
-        return dataFolder;
     }
 }
