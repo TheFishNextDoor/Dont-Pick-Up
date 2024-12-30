@@ -26,7 +26,12 @@ public class DPU implements CommandExecutor, TabCompleter {
         Player player = (Player) sender;
 
         if (args.length == 1) {
-            return List.of("add", "remove", "list");
+            if (sender.hasPermission("dontpickup.reload")) {
+                return List.of("add", "remove", "list", "reload");
+            }
+            else{
+                return List.of("add", "remove", "list");
+            }
         }
         else if (args.length >= 2) {
             String subCommand = args[0];
@@ -115,6 +120,11 @@ public class DPU implements CommandExecutor, TabCompleter {
             TrackedPlayer.get(player).dontPickUp(material);
             String materialNameFormatted = materialName.toLowerCase().replaceAll("_", " ");
             Language.sendMessage(player, Language.replaceVariable(language.DONT_PICKUP_MATERIAL, "<material>", materialNameFormatted));
+            return true;
+        }
+        else if (subCommand.equals("reload") && player.hasPermission("dontpickup.reload")) {
+            DontPickUp.loadConfigs();
+            Language.sendMessage(player, language.PLUGIN_RELOADED);
             return true;
         }
 

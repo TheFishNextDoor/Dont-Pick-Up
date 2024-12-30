@@ -1,6 +1,7 @@
 package com.thefishnextdoor.dontpickup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,6 +23,7 @@ public class Language {
     public final ArrayList<String> BLOCKED_MATERIALS_HEADER;
     public final ArrayList<String> BLOCKED_MATERIALS_MATERIAL;
     public final ArrayList<String> INVALID_COMMAND;
+    public final ArrayList<String> PLUGIN_RELOADED;
 
     public Language(DontPickUp plugin) {
         YamlConfiguration languageFile = ConfigFile.get("language");
@@ -37,15 +39,24 @@ public class Language {
         BLOCKED_MATERIALS_HEADER = getValue(languageFile, "blocked-materials-header");
         BLOCKED_MATERIALS_MATERIAL = getValue(languageFile, "blocked-materials-material");
         INVALID_COMMAND = getValue(languageFile, "invalid-command");
+        PLUGIN_RELOADED = getValue(languageFile, "plugin-reloaded");
+
     }
 
     public static ArrayList<String> getValue(YamlConfiguration config, String key) {
         ArrayList<String> value = new ArrayList<>();
-        for (String line : config.getStringList(key)) {
+        List<String> lines = config.getStringList(key);
+        if (lines == null) {
+            return value;
+        }
+        for (String line : lines) {
             value.add(ChatColor.translateAlternateColorCodes('&', line));
         }
         if (value.isEmpty()) {
-            value.add(ChatColor.translateAlternateColorCodes('&', config.getString(key)));
+            String line = config.getString(key);
+            if (line != null) {
+                value.add(ChatColor.translateAlternateColorCodes('&', line));
+            }
         }
         return value;
     }
