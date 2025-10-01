@@ -87,7 +87,7 @@ public class TrackedPlayer {
     }
 
     private boolean isOnline() {
-        return DontPickUp.getInstance().getServer().getPlayer(id) != null;
+        return DontPickUpPlugin.getInstance().getServer().getPlayer(id) != null;
     }
 
     private YamlConfiguration getPlayerFile() {
@@ -100,7 +100,7 @@ public class TrackedPlayer {
     }
 
     public static void preLoad(final Player player) {
-        DontPickUp plugin = DontPickUp.getInstance();
+        DontPickUpPlugin plugin = DontPickUpPlugin.getInstance();
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
     
             @Override

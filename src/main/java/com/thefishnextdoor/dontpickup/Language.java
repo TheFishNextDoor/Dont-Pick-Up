@@ -25,7 +25,7 @@ public class Language {
     public final ArrayList<String> INVALID_COMMAND;
     public final ArrayList<String> PLUGIN_RELOADED;
 
-    public Language(DontPickUp plugin) {
+    public Language(DontPickUpPlugin plugin) {
         YamlConfiguration languageFile = ConfigFile.get("language");
 
         HELP = getValue(languageFile, "help");

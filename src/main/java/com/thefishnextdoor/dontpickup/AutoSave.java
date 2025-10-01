@@ -11,7 +11,7 @@ public class AutoSave {
             return;
         }
 
-        DontPickUp plugin = DontPickUp.getInstance();
+        DontPickUpPlugin plugin = DontPickUpPlugin.getInstance();
         autoSaveTaskId = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
 
             @Override
@@ -24,7 +24,7 @@ public class AutoSave {
 
     public static void stop() {
         if (autoSaveTaskId != -1) {
-            DontPickUp.getInstance().getServer().getScheduler().cancelTask(autoSaveTaskId);
+            DontPickUpPlugin.getInstance().getServer().getScheduler().cancelTask(autoSaveTaskId);
             autoSaveTaskId = -1;
         }   
     }   

@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.thefishnextdoor.dontpickup.DontPickUp;
+import com.thefishnextdoor.dontpickup.DontPickUpPlugin;
 
 public class ConfigFile {
 
@@ -16,7 +16,7 @@ public class ConfigFile {
         File configFile = new File(getFolder(), name + ".yml");
         if (!configFile.exists()) {
             try {
-                DontPickUp.getInstance().saveResource(name + ".yml", false);
+                DontPickUpPlugin.getInstance().saveResource(name + ".yml", false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -25,7 +25,7 @@ public class ConfigFile {
     }
 
     private static File getFolder() {
-        File pluginFolder = DontPickUp.getInstance().getDataFolder();
+        File pluginFolder = DontPickUpPlugin.getInstance().getDataFolder();
         if (!pluginFolder.exists()) {
             pluginFolder.mkdirs();
         }

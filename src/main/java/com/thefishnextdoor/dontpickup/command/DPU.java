@@ -11,7 +11,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.thefishnextdoor.dontpickup.DontPickUp;
+import com.thefishnextdoor.dontpickup.DontPickUpPlugin;
 import com.thefishnextdoor.dontpickup.Language;
 import com.thefishnextdoor.dontpickup.TrackedPlayer;
 
@@ -50,7 +50,7 @@ public class DPU implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Language language = DontPickUp.getLanguage();
+        Language language = DontPickUpPlugin.getLanguage();
 
         if (!(sender instanceof Player)) {
             Language.sendMessage(sender, language.MUST_BE_PLAYER);
@@ -123,7 +123,7 @@ public class DPU implements CommandExecutor, TabCompleter {
             return true;
         }
         else if (subCommand.equals("reload") && player.hasPermission("dontpickup.reload")) {
-            DontPickUp.loadConfigs();
+            DontPickUpPlugin.loadConfigs();
             Language.sendMessage(player, language.PLUGIN_RELOADED);
             return true;
         }

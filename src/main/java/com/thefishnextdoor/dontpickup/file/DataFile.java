@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.thefishnextdoor.dontpickup.DontPickUp;
+import com.thefishnextdoor.dontpickup.DontPickUpPlugin;
 
 public class DataFile {
 
@@ -44,7 +44,7 @@ public class DataFile {
     }
 
     private static File getFolder() {
-        File pluginFolder = DontPickUp.getInstance().getDataFolder();
+        File pluginFolder = DontPickUpPlugin.getInstance().getDataFolder();
         if (!pluginFolder.exists()) {
             pluginFolder.mkdirs();
         }

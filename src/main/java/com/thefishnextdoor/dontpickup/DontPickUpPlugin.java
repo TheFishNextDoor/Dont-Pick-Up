@@ -7,9 +7,9 @@ import com.thefishnextdoor.dontpickup.command.DPU;
 import com.thefishnextdoor.dontpickup.event.Join;
 import com.thefishnextdoor.dontpickup.event.PickUp;
 
-public class DontPickUp extends JavaPlugin {
+public class DontPickUpPlugin extends JavaPlugin {
 
-    private static DontPickUp instance;
+    private static DontPickUpPlugin instance;
 
     private static Language language;
 
@@ -42,7 +42,7 @@ public class DontPickUp extends JavaPlugin {
         language = new Language(instance);
     }
 
-    public static DontPickUp getInstance() {
+    public static DontPickUpPlugin getInstance() {
         return instance;
     }
 
