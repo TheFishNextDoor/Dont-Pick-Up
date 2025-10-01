@@ -1,4 +1,5 @@
 package com.thefishnextdoor.dontpickup;
+
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
