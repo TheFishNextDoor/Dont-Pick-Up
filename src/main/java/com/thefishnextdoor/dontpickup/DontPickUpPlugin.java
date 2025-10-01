@@ -4,8 +4,10 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.thefishnextdoor.dontpickup.command.DPU;
+import com.thefishnextdoor.dontpickup.config.Language;
 import com.thefishnextdoor.dontpickup.event.Join;
 import com.thefishnextdoor.dontpickup.event.PickUp;
+import com.thefishnextdoor.dontpickup.player.PlayerProfileManager;
 import com.thefishnextdoor.dontpickup.scheduler.AutoSave;
 
 public class DontPickUpPlugin extends JavaPlugin {
@@ -35,7 +37,7 @@ public class DontPickUpPlugin extends JavaPlugin {
 
     public void onDisable() {
         AutoSave.stop();
-        TrackedPlayer.saveAll();
+        PlayerProfileManager.saveAll();
         getLogger().info("Plugin disabled");
     }
 

@@ -1,30 +1,39 @@
-package com.thefishnextdoor.dontpickup;
+package com.thefishnextdoor.dontpickup.player;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import com.thefishnextdoor.dontpickup.DontPickUpPlugin;
 import com.thefishnextdoor.dontpickup.file.DataFile;
 
-public class TrackedPlayer {
-
-    private static ConcurrentHashMap<UUID, TrackedPlayer> trackedPlayers = new ConcurrentHashMap<UUID, TrackedPlayer>();
+public class PlayerProfile {
 
     private final UUID id;
 
     private HashSet<Material> dontPickUp = new HashSet<>();
+
     private boolean changes = false;
 
-    private TrackedPlayer(Player player) {
+    PlayerProfile(Player player) {
         this.id = player.getUniqueId();
-        load();
-        trackedPlayers.put(this.id, this);
+
+        YamlConfiguration playerFile = getPlayerFile();
+
+        dontPickUp.clear();
+
+        List<String> materialNames = playerFile.getStringList("BlockedMaterials");
+        for (String name : materialNames) {
+            Material material = Material.matchMaterial(name);
+            if (material != null) {
+                dontPickUp.add(material);
+            }
+        }
     }
 
     public boolean canPickUp(Material material) {
@@ -51,21 +60,7 @@ public class TrackedPlayer {
         }
     }
 
-    private void load() {
-        YamlConfiguration playerFile = getPlayerFile();
-
-        dontPickUp.clear();
-
-        List<String> materialNames = playerFile.getStringList("BlockedMaterials");
-        for (String name : materialNames) {
-            Material material = Material.matchMaterial(name);
-            if (material != null) {
-                dontPickUp.add(material);
-            }
-        }
-    }
-
-    private void save() {
+    public void save() {
         if (changes) {
             YamlConfiguration playerFile = getPlayerFile();
             
@@ -82,7 +77,7 @@ public class TrackedPlayer {
         }
 
         if (!changes && !isOnline()) {
-            trackedPlayers.remove(id);
+            PlayerProfileManager.unload(id);
         }
     }
 
@@ -92,28 +87,5 @@ public class TrackedPlayer {
 
     private YamlConfiguration getPlayerFile() {
         return DataFile.get(id.toString());
-    }
-
-    public static TrackedPlayer get(Player player) {
-        TrackedPlayer trackedPlayer = trackedPlayers.get(player.getUniqueId());
-        return trackedPlayer != null ? trackedPlayer : new TrackedPlayer(player);
-    }
-
-    public static void preLoad(final Player player) {
-        DontPickUpPlugin plugin = DontPickUpPlugin.getInstance();
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-    
-            @Override
-            public void run() {
-                get(player);
-            }
-    
-        });
-    }
-
-    public static void saveAll() {
-        for (TrackedPlayer trackedPlayer : trackedPlayers.values()) {
-            trackedPlayer.save();
-        }
     }
 }

@@ -1,7 +1,7 @@
 package com.thefishnextdoor.dontpickup.scheduler;
 
 import com.thefishnextdoor.dontpickup.DontPickUpPlugin;
-import com.thefishnextdoor.dontpickup.TrackedPlayer;
+import com.thefishnextdoor.dontpickup.player.PlayerProfileManager;
 
 public class AutoSave {
 
@@ -19,7 +19,7 @@ public class AutoSave {
 
             @Override
             public void run() {
-                TrackedPlayer.saveAll();
+                PlayerProfileManager.saveAll();
             }
 
         }, PERIOD, PERIOD).getTaskId();

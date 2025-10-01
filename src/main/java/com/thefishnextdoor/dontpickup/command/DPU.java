@@ -12,8 +12,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.thefishnextdoor.dontpickup.DontPickUpPlugin;
-import com.thefishnextdoor.dontpickup.Language;
-import com.thefishnextdoor.dontpickup.TrackedPlayer;
+import com.thefishnextdoor.dontpickup.config.Language;
+import com.thefishnextdoor.dontpickup.player.PlayerProfile;
+import com.thefishnextdoor.dontpickup.player.PlayerProfileManager;
 
 public class DPU implements CommandExecutor, TabCompleter {
 
@@ -88,7 +89,7 @@ public class DPU implements CommandExecutor, TabCompleter {
             }
 
             if (materialName.equalsIgnoreCase("all")) {
-                TrackedPlayer.get(player).pickUpAll();
+                PlayerProfileManager.get(player).pickUpAll();
                 Language.sendMessage(player, language.PICK_UP_ALL);
                 return true;
             }
@@ -99,7 +100,7 @@ public class DPU implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            TrackedPlayer.get(player).pickUp(material);
+            PlayerProfileManager.get(player).pickUp(material);
             String materialNameFormatted = materialName.toLowerCase().replaceAll("_", " ");
             Language.sendMessage(player, Language.replaceVariable(language.PICK_UP_MATERIAL, "<material>", materialNameFormatted));
             return true;
@@ -117,7 +118,7 @@ public class DPU implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            TrackedPlayer.get(player).dontPickUp(material);
+            PlayerProfileManager.get(player).dontPickUp(material);
             String materialNameFormatted = materialName.toLowerCase().replaceAll("_", " ");
             Language.sendMessage(player, Language.replaceVariable(language.DONT_PICKUP_MATERIAL, "<material>", materialNameFormatted));
             return true;
@@ -149,7 +150,7 @@ public class DPU implements CommandExecutor, TabCompleter {
 
     private static ArrayList<String> getBlockedMaterialsAsStrings(Player player) {
         ArrayList<String> blocked = new ArrayList<>();
-        TrackedPlayer trackedPlayer = TrackedPlayer.get(player);
+        PlayerProfile trackedPlayer = PlayerProfileManager.get(player);
         for (Material material : Material.values()) {
             if (!trackedPlayer.canPickUp(material)) {
                 blocked.add(material.name().toLowerCase());
@@ -160,7 +161,7 @@ public class DPU implements CommandExecutor, TabCompleter {
 
     private static ArrayList<String> getAllowedMaterialsAsStrings(Player player) {
         ArrayList<String> allowed = new ArrayList<>();
-        TrackedPlayer trackedPlayer = TrackedPlayer.get(player);
+        PlayerProfile trackedPlayer = PlayerProfileManager.get(player);
         for (Material material : Material.values()) {
             if (trackedPlayer.canPickUp(material)) {
                 allowed.add(material.name().toLowerCase());

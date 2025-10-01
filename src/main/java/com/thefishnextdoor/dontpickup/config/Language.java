@@ -1,4 +1,4 @@
-package com.thefishnextdoor.dontpickup;
+package com.thefishnextdoor.dontpickup.config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import com.thefishnextdoor.dontpickup.DontPickUpPlugin;
 import com.thefishnextdoor.dontpickup.file.ConfigFile;
 
 import net.md_5.bungee.api.ChatColor;

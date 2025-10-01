@@ -4,12 +4,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import com.thefishnextdoor.dontpickup.TrackedPlayer;
+import com.thefishnextdoor.dontpickup.player.PlayerProfileManager;
 
 public class Join implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        TrackedPlayer.preLoad(event.getPlayer());
+        PlayerProfileManager.preLoad(event.getPlayer());
     }
 }
