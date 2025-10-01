@@ -1,4 +1,7 @@
-package com.thefishnextdoor.dontpickup;
+package com.thefishnextdoor.dontpickup.scheduler;
+
+import com.thefishnextdoor.dontpickup.DontPickUpPlugin;
+import com.thefishnextdoor.dontpickup.TrackedPlayer;
 
 public class AutoSave {
 
