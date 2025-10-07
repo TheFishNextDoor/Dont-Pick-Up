@@ -1,7 +1,7 @@
-package com.thefishnextdoor.dontpickup.scheduler;
+package fun.sunrisemc.dontpickup.scheduler;
 
-import com.thefishnextdoor.dontpickup.DontPickUpPlugin;
-import com.thefishnextdoor.dontpickup.player.PlayerProfileManager;
+import fun.sunrisemc.dontpickup.DontPickUpPlugin;
+import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
 
 public class AutoSave {
 

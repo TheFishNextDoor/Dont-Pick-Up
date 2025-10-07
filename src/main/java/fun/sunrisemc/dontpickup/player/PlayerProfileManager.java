@@ -1,4 +1,4 @@
-package com.thefishnextdoor.dontpickup.player;
+package fun.sunrisemc.dontpickup.player;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import com.thefishnextdoor.dontpickup.DontPickUpPlugin;
+import fun.sunrisemc.dontpickup.DontPickUpPlugin;
 
 public class PlayerProfileManager {
 

@@ -1,4 +1,4 @@
-package com.thefishnextdoor.dontpickup.command;
+package fun.sunrisemc.dontpickup.command;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +12,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import com.thefishnextdoor.dontpickup.DontPickUpPlugin;
-import com.thefishnextdoor.dontpickup.config.Language;
-import com.thefishnextdoor.dontpickup.player.PlayerProfile;
-import com.thefishnextdoor.dontpickup.player.PlayerProfileManager;
+import fun.sunrisemc.dontpickup.DontPickUpPlugin;
+import fun.sunrisemc.dontpickup.config.Language;
+import fun.sunrisemc.dontpickup.player.PlayerProfile;
+import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
 
 public class DPU implements CommandExecutor, TabCompleter {
 

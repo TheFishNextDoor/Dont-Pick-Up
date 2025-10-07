@@ -1,4 +1,4 @@
-package com.thefishnextdoor.dontpickup.event;
+package fun.sunrisemc.dontpickup.event;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -7,8 +7,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 
-import com.thefishnextdoor.dontpickup.player.PlayerProfile;
-import com.thefishnextdoor.dontpickup.player.PlayerProfileManager;
+import fun.sunrisemc.dontpickup.player.PlayerProfile;
+import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
 
 public class PickUp implements Listener {
 

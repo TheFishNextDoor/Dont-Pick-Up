@@ -1,11 +1,11 @@
-package com.thefishnextdoor.dontpickup.file;
+package fun.sunrisemc.dontpickup.file;
 
 import java.io.File;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import com.thefishnextdoor.dontpickup.DontPickUpPlugin;
+import fun.sunrisemc.dontpickup.DontPickUpPlugin;
 
 public class DataFile {
 

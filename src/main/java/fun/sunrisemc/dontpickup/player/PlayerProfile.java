@@ -1,4 +1,4 @@
-package com.thefishnextdoor.dontpickup.player;
+package fun.sunrisemc.dontpickup.player;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,8 +10,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import com.thefishnextdoor.dontpickup.DontPickUpPlugin;
-import com.thefishnextdoor.dontpickup.file.DataFile;
+import fun.sunrisemc.dontpickup.DontPickUpPlugin;
+import fun.sunrisemc.dontpickup.file.DataFile;
 
 public class PlayerProfile {
 

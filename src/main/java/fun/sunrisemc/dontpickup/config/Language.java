@@ -1,4 +1,4 @@
-package com.thefishnextdoor.dontpickup.config;
+package fun.sunrisemc.dontpickup.config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import com.thefishnextdoor.dontpickup.file.ConfigFile;
+import fun.sunrisemc.dontpickup.file.ConfigFile;
 
 import net.md_5.bungee.api.ChatColor;
 

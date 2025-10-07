@@ -1,11 +1,11 @@
-package com.thefishnextdoor.dontpickup.event;
+package fun.sunrisemc.dontpickup.event;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import com.thefishnextdoor.dontpickup.player.PlayerProfileManager;
+import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
 
 public class Join implements Listener {
 

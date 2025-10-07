@@ -1,4 +1,4 @@
-package com.thefishnextdoor.dontpickup;
+package fun.sunrisemc.dontpickup;
 
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -7,12 +7,12 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import com.thefishnextdoor.dontpickup.command.DPU;
-import com.thefishnextdoor.dontpickup.config.Language;
-import com.thefishnextdoor.dontpickup.event.Join;
-import com.thefishnextdoor.dontpickup.event.PickUp;
-import com.thefishnextdoor.dontpickup.player.PlayerProfileManager;
-import com.thefishnextdoor.dontpickup.scheduler.AutoSave;
+import fun.sunrisemc.dontpickup.command.DPU;
+import fun.sunrisemc.dontpickup.config.Language;
+import fun.sunrisemc.dontpickup.event.Join;
+import fun.sunrisemc.dontpickup.event.PickUp;
+import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
+import fun.sunrisemc.dontpickup.scheduler.AutoSave;
 
 public class DontPickUpPlugin extends JavaPlugin {
 
