@@ -5,6 +5,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.thefishnextdoor.dontpickup.command.DPU;
 import com.thefishnextdoor.dontpickup.config.Language;
@@ -42,7 +43,7 @@ public class DontPickUpPlugin extends JavaPlugin {
     }
 
     public static void loadConfigs() {
-        language = new Language(instance);
+        language = new Language();
     }
 
     public static DontPickUpPlugin getInstance() {
@@ -53,19 +54,19 @@ public class DontPickUpPlugin extends JavaPlugin {
         return language;
     }
 
-    public static void logInfo(String message) {
+    public static void logInfo(@NonNull String message) {
         getInstance().getLogger().info(message);
     }
 
-    public static void logWarning(String message) {
+    public static void logWarning(@NonNull String message) {
         getInstance().getLogger().warning(message);
     }
 
-    public static void logSevere(String message) {
+    public static void logSevere(@NonNull String message) {
         getInstance().getLogger().severe(message);
     }
 
-    private boolean registerCommand(String commandName, CommandExecutor commandExecutor) {
+    private boolean registerCommand(@NonNull String commandName, @NonNull CommandExecutor commandExecutor) {
         PluginCommand command = getCommand(commandName);
         if (command == null) {
             DontPickUpPlugin.logSevere("Command '" + commandName + "' not found in plugin.yml.");

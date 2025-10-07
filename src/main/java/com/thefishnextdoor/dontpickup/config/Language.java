@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-import com.thefishnextdoor.dontpickup.DontPickUpPlugin;
 import com.thefishnextdoor.dontpickup.file.ConfigFile;
 
 import net.md_5.bungee.api.ChatColor;
@@ -26,7 +26,7 @@ public class Language {
     public final ArrayList<String> INVALID_COMMAND;
     public final ArrayList<String> PLUGIN_RELOADED;
 
-    public Language(DontPickUpPlugin plugin) {
+    public Language() {
         YamlConfiguration languageFile = ConfigFile.get("language", true);
 
         HELP = getValue(languageFile, "help");
@@ -41,10 +41,9 @@ public class Language {
         BLOCKED_MATERIALS_MATERIAL = getValue(languageFile, "blocked-materials-material");
         INVALID_COMMAND = getValue(languageFile, "invalid-command");
         PLUGIN_RELOADED = getValue(languageFile, "plugin-reloaded");
-
     }
 
-    public static ArrayList<String> getValue(YamlConfiguration config, String key) {
+    public static ArrayList<String> getValue(@NonNull YamlConfiguration config, String key) {
         ArrayList<String> value = new ArrayList<>();
         List<String> lines = config.getStringList(key);
         if (lines == null) {
@@ -62,7 +61,7 @@ public class Language {
         return value;
     }
 
-    public static void sendMessage(CommandSender sender, ArrayList<String> message) {
+    public static void sendMessage(@NonNull CommandSender sender, @NonNull ArrayList<String> message) {
         if (message.size() == 1 && message.get(0).isEmpty()) {
             return;
         }
@@ -71,7 +70,7 @@ public class Language {
         }
     }
 
-    public static ArrayList<String> replaceVariable(ArrayList<String> in, String variable, String replacement) {
+    public static ArrayList<String> replaceVariable(@NonNull ArrayList<String> in, @NonNull String variable, @NonNull String replacement) {
         ArrayList<String> out = new ArrayList<>();
         for (String line : in) {
             out.add(line.replace(variable, replacement));

@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.thefishnextdoor.dontpickup.DontPickUpPlugin;
 import com.thefishnextdoor.dontpickup.config.Language;
@@ -60,6 +61,7 @@ public class DPU implements CommandExecutor, TabCompleter {
 
         Player player = (Player) sender;
 
+        // Help //
         if (args.length < 1 || args[0].equalsIgnoreCase("help")) {
             Language.sendMessage(player, language.HELP);
             return true;
@@ -67,6 +69,7 @@ public class DPU implements CommandExecutor, TabCompleter {
 
         String subCommand = args[0];
 
+        // List //
         if (subCommand.equals("list")) {
             ArrayList<String> notPickingUp = getBlockedMaterialsAsStrings(player);
             if (notPickingUp.size() == 0) {
@@ -81,6 +84,7 @@ public class DPU implements CommandExecutor, TabCompleter {
             }
             return true;
         }
+        // Remove //
         else if (subCommand.equals("remove")) {
             String materialName = materialName(player, args);
             if (materialName == null) {
@@ -105,6 +109,7 @@ public class DPU implements CommandExecutor, TabCompleter {
             Language.sendMessage(player, Language.replaceVariable(language.PICK_UP_MATERIAL, "<material>", materialNameFormatted));
             return true;
         }
+        // Add //
         else if (subCommand.equals("add")) {
             String materialName = materialName(player, args);
             if (materialName == null) {
@@ -123,6 +128,7 @@ public class DPU implements CommandExecutor, TabCompleter {
             Language.sendMessage(player, Language.replaceVariable(language.DONT_PICKUP_MATERIAL, "<material>", materialNameFormatted));
             return true;
         }
+        // Reload //
         else if (subCommand.equals("reload") && player.hasPermission("dontpickup.reload")) {
             DontPickUpPlugin.loadConfigs();
             Language.sendMessage(player, language.PLUGIN_RELOADED);
@@ -133,7 +139,7 @@ public class DPU implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    private static String materialName(Player player, String[] args) {
+    private static String materialName(@NonNull Player player, @NonNull String[] args) {
         if (args.length < 2) {
             ItemStack hand = player.getInventory().getItemInMainHand();
             ItemStack offHand = player.getInventory().getItemInOffHand();
@@ -148,7 +154,7 @@ public class DPU implements CommandExecutor, TabCompleter {
         }
     }
 
-    private static ArrayList<String> getBlockedMaterialsAsStrings(Player player) {
+    private static ArrayList<String> getBlockedMaterialsAsStrings(@NonNull Player player) {
         ArrayList<String> blocked = new ArrayList<>();
         PlayerProfile trackedPlayer = PlayerProfileManager.get(player);
         for (Material material : Material.values()) {
@@ -159,7 +165,7 @@ public class DPU implements CommandExecutor, TabCompleter {
         return blocked;
     }
 
-    private static ArrayList<String> getAllowedMaterialsAsStrings(Player player) {
+    private static ArrayList<String> getAllowedMaterialsAsStrings(@NonNull Player player) {
         ArrayList<String> allowed = new ArrayList<>();
         PlayerProfile trackedPlayer = PlayerProfileManager.get(player);
         for (Material material : Material.values()) {
@@ -170,7 +176,7 @@ public class DPU implements CommandExecutor, TabCompleter {
         return allowed;
     }
 
-    private static String titleCase(String str) {
+    private static String titleCase(@NonNull String str) {
         str = str.replace("_", " ");
         String[] words = str.split(" ");
         String titleCase = "";

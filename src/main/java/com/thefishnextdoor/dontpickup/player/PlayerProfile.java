@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.thefishnextdoor.dontpickup.DontPickUpPlugin;
 import com.thefishnextdoor.dontpickup.file.DataFile;
@@ -20,7 +21,7 @@ public class PlayerProfile {
 
     private boolean changes = false;
 
-    PlayerProfile(Player player) {
+    PlayerProfile(@NonNull Player player) {
         this.id = player.getUniqueId();
 
         YamlConfiguration playerFile = getPlayerFile();
@@ -36,18 +37,18 @@ public class PlayerProfile {
         }
     }
 
-    public boolean canPickUp(Material material) {
+    public boolean canPickUp(@NonNull Material material) {
         return !dontPickUp.contains(material);
     }
 
-    public void dontPickUp(Material material) {
+    public void dontPickUp(@NonNull Material material) {
         if (!dontPickUp.contains(material)) {
             dontPickUp.add(material);
             changes = true;
         }
     }
 
-    public void pickUp(Material material) {
+    public void pickUp(@NonNull Material material) {
         if (dontPickUp.remove(material)) {
             changes = true;
         }
