@@ -27,7 +27,7 @@ public class Language {
     public final ArrayList<String> PLUGIN_RELOADED;
 
     public Language(DontPickUpPlugin plugin) {
-        YamlConfiguration languageFile = ConfigFile.get("language");
+        YamlConfiguration languageFile = ConfigFile.get("language", true);
 
         HELP = getValue(languageFile, "help");
         MUST_BE_PLAYER = getValue(languageFile, "must-be-player");
