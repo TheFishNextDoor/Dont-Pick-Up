@@ -5,7 +5,7 @@ import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
 
 public class AutoSave {
 
-    private final static int PERIOD = 1200;
+    private final static int INTERVAL_TICKS = 1200;
 
     private static int autoSaveTaskId = -1;
 
@@ -22,7 +22,7 @@ public class AutoSave {
                 PlayerProfileManager.saveAll();
             }
 
-        }, PERIOD, PERIOD).getTaskId();
+        }, INTERVAL_TICKS, INTERVAL_TICKS).getTaskId();
     }
 
     public static void stop() {

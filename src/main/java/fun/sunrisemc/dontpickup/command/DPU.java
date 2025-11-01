@@ -14,6 +14,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import fun.sunrisemc.dontpickup.DontPickUpPlugin;
 import fun.sunrisemc.dontpickup.config.Language;
+import fun.sunrisemc.dontpickup.permission.Permissions;
 import fun.sunrisemc.dontpickup.player.PlayerProfile;
 import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
 
@@ -28,7 +29,7 @@ public class DPU implements CommandExecutor, TabCompleter {
         Player player = (Player) sender;
 
         if (args.length == 1) {
-            if (sender.hasPermission("dontpickup.reload")) {
+            if (sender.hasPermission(Permissions.RELOAD_PERMISSION)) {
                 return List.of("add", "remove", "list", "reload");
             }
             else{
@@ -129,7 +130,7 @@ public class DPU implements CommandExecutor, TabCompleter {
             return true;
         }
         // Reload //
-        else if (subCommand.equals("reload") && player.hasPermission("dontpickup.reload")) {
+        else if (subCommand.equals("reload") && player.hasPermission(Permissions.RELOAD_PERMISSION)) {
             DontPickUpPlugin.loadConfigs();
             Language.sendMessage(player, language.PLUGIN_RELOADED);
             return true;
