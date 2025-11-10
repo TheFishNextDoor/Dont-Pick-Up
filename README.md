@@ -1,4 +1,4 @@
-# Don't Pick Up Bukkit Plugin
+# Don't Pick Up
 Allows players to specify a blacklist of materials they wish to not pick up
 
 ## Setup
