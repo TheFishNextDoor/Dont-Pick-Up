@@ -2,7 +2,7 @@
 Allows players to specify a blacklist of materials they wish to not pick up.
 
 ## Setup
-1. Place the plugin in your plugins folder.
+1. Add Don't Pick Up jar into your plugins folder.
 2. Restart your server.
 3. Users will have access to the "/dpu" command by default.
 
