@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
 
-public class Join implements Listener {
+public class PlayerJoin implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {

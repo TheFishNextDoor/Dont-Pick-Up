@@ -9,8 +9,8 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import fun.sunrisemc.dontpickup.command.DontPickUpCommand;
 import fun.sunrisemc.dontpickup.config.Language;
-import fun.sunrisemc.dontpickup.event.Join;
-import fun.sunrisemc.dontpickup.event.PickUp;
+import fun.sunrisemc.dontpickup.event.PlayerJoin;
+import fun.sunrisemc.dontpickup.event.PickUpItem;
 import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
 import fun.sunrisemc.dontpickup.scheduler.AutoSave;
 
@@ -28,8 +28,8 @@ public class DontPickUpPlugin extends JavaPlugin {
         registerCommand("dontpickup", new DontPickUpCommand());
 
         PluginManager pluginManager = getServer().getPluginManager();
-        pluginManager.registerEvents(new Join(), this);
-        pluginManager.registerEvents(new PickUp(), this);
+        pluginManager.registerEvents(new PlayerJoin(), this);
+        pluginManager.registerEvents(new PickUpItem(), this);
 
         AutoSave.start();
 

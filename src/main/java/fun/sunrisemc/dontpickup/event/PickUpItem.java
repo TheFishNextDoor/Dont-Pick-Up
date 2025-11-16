@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import fun.sunrisemc.dontpickup.player.PlayerProfile;
 import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
 
-public class PickUp implements Listener {
+public class PickUpItem implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPickUp(EntityPickupItemEvent event) {
