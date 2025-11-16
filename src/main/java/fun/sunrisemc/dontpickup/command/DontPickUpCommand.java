@@ -18,7 +18,7 @@ import fun.sunrisemc.dontpickup.permission.Permissions;
 import fun.sunrisemc.dontpickup.player.PlayerProfile;
 import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
 
-public class DPU implements CommandExecutor, TabCompleter {
+public class DontPickUpCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {

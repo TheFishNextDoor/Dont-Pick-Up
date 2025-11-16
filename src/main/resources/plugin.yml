@@ -3,17 +3,17 @@ main: fun.sunrisemc.dontpickup.DontPickUpPlugin
 version: 1.2.1
 api-version: 1.18
 authors: ["TheFishNextDoor"]
-description: DontPickUp by TheFishNextDoor
+description: Allows players to specify a blacklist of materials they wish to not pick up.
 commands:
   dontpickup:
-    description: Enable or disable the pickup of items
+    description: Enable or disable the pickup of items.
     usage: /dontpickup <add|remove|list>
     aliases: [dpu]
     permission: dpu.use
 permissions:
   dpu.use:
-    description: Allows the use of the dontpickup command
+    description: Allows the use of the dontpickup command.
     default: true
   dpu.reload:
-    description: Allows the use of the reload subcommand
+    description: Allows the use of the reload subcommand.
     default: op

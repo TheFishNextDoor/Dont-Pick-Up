@@ -7,7 +7,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import fun.sunrisemc.dontpickup.command.DPU;
+import fun.sunrisemc.dontpickup.command.DontPickUpCommand;
 import fun.sunrisemc.dontpickup.config.Language;
 import fun.sunrisemc.dontpickup.event.Join;
 import fun.sunrisemc.dontpickup.event.PickUp;
@@ -25,7 +25,7 @@ public class DontPickUpPlugin extends JavaPlugin {
 
         loadConfigs();
 
-        registerCommand("dontpickup", new DPU());
+        registerCommand("dontpickup", new DontPickUpCommand());
 
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new Join(), this);
