@@ -5,7 +5,9 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import fun.sunrisemc.dontpickup.command.DontPickUpCommand;
 import fun.sunrisemc.dontpickup.config.Language;
@@ -16,14 +18,16 @@ import fun.sunrisemc.dontpickup.scheduler.AutoSave;
 
 public class DontPickUpPlugin extends JavaPlugin {
 
-    private static DontPickUpPlugin instance;
+    private static @Nullable DontPickUpPlugin instance;
 
-    private static Language language;
+    private static @Nullable Language language;
+
+    // Java Plugin
 
     public void onEnable() {
         instance = this;
 
-        loadConfigs();
+        language = new Language();
 
         registerCommand("dontpickup", new DontPickUpCommand());
 
@@ -42,9 +46,7 @@ public class DontPickUpPlugin extends JavaPlugin {
         logInfo("Plugin disabled");
     }
 
-    public static void loadConfigs() {
-        language = new Language();
-    }
+    // Instances
 
     public static DontPickUpPlugin getInstance() {
         return instance;
@@ -54,19 +56,29 @@ public class DontPickUpPlugin extends JavaPlugin {
         return language;
     }
 
-    public static void logInfo(@NonNull String message) {
+    // Reloading
+
+    public static void reload() {
+        language = new Language();
+    }
+
+    // Logging
+
+    public static void logInfo(@NotNull String message) {
         getInstance().getLogger().info(message);
     }
 
-    public static void logWarning(@NonNull String message) {
+    public static void logWarning(@NotNull String message) {
         getInstance().getLogger().warning(message);
     }
 
-    public static void logSevere(@NonNull String message) {
+    public static void logSevere(@NotNull String message) {
         getInstance().getLogger().severe(message);
     }
 
-    private boolean registerCommand(@NonNull String commandName, @NonNull CommandExecutor commandExecutor) {
+    // Command Registration
+
+    private boolean registerCommand(@NotNull String commandName, @NotNull CommandExecutor commandExecutor) {
         PluginCommand command = getCommand(commandName);
         if (command == null) {
             DontPickUpPlugin.logSevere("Command '" + commandName + "' not found in plugin.yml.");

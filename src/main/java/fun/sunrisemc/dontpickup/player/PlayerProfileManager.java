@@ -4,7 +4,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
+import org.jetbrains.annotations.NotNull;
 
 import fun.sunrisemc.dontpickup.DontPickUpPlugin;
 
@@ -14,10 +15,11 @@ public class PlayerProfileManager {
 
     @NotNull
     public static PlayerProfile get(@NotNull Player player) {
-        PlayerProfile profile = playerProfiles.get(player.getUniqueId());
+        UUID key = player.getUniqueId();
+        PlayerProfile profile = playerProfiles.get(key);
         if (profile == null) {
             profile = new PlayerProfile(player);
-            playerProfiles.put(player.getUniqueId(), profile);
+            playerProfiles.put(key, profile);
         }
         return profile;
     }

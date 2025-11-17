@@ -25,6 +25,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String @NotNull [] args) {
+        // Get player
         if (!(sender instanceof Player)) {
             return null;
         }
@@ -60,8 +61,10 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args) {
+        // Get language
         Language language = DontPickUpPlugin.getLanguage();
 
+        // Get player
         if (!(sender instanceof Player)) {
             Language.sendMessage(sender, language.MUST_BE_PLAYER);
             return true;
@@ -69,7 +72,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
 
         Player player = (Player) sender;
 
-        // Help
+        // Get the subcommand
         if (args.length < 1) {
             Language.sendMessage(player, language.HELP);
             return true;
@@ -144,11 +147,12 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
         }
         // Reload
         else if (subCommand.equals("reload") && player.hasPermission(Permissions.RELOAD_PERMISSION)) {
-            DontPickUpPlugin.loadConfigs();
+            DontPickUpPlugin.reload();
             Language.sendMessage(player, language.PLUGIN_RELOADED);
             return true;
         }
 
+        // Unknown subcommand
         Language.sendMessage(player, language.HELP);
         return true;
     }
