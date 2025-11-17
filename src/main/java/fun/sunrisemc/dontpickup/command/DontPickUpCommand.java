@@ -11,8 +11,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,6 +19,7 @@ import fun.sunrisemc.dontpickup.config.Language;
 import fun.sunrisemc.dontpickup.permission.Permissions;
 import fun.sunrisemc.dontpickup.player.PlayerProfile;
 import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
+import fun.sunrisemc.dontpickup.utils.PlayerUtils;
 import fun.sunrisemc.dontpickup.utils.StringUtils;
 
 public class DontPickUpCommand implements CommandExecutor, TabCompleter {
@@ -117,7 +116,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
                 material = StringUtils.parseMaterial(materialInput);
             }
             else {
-                material = getMaterialInHand(player);
+                material = PlayerUtils.getMaterialInHand(player);
             }
 
             if (material.isEmpty()) {
@@ -139,7 +138,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
                 material = StringUtils.parseMaterial(args[1]);
             }
             else {
-                material = getMaterialInHand(player);
+                material = PlayerUtils.getMaterialInHand(player);
             }
 
             if (material.isEmpty()) {
@@ -188,22 +187,4 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
         }
         return allowed;
     }
-
-    private static Optional<Material> getMaterialInHand(@NotNull Player player) {
-        PlayerInventory inventory = player.getInventory();
-
-        ItemStack main = inventory.getItemInMainHand();
-        if (main != null && main.getAmount() > 0 && !main.getType().isAir()) {
-            return Optional.of(main.getType());
-        }
-
-        ItemStack off = inventory.getItemInOffHand();
-        if (off != null && off.getAmount() > 0 && !off.getType().isAir()) {
-            return Optional.of(off.getType());
-        }
-
-        return Optional.empty();
-    }
-
-
 }
