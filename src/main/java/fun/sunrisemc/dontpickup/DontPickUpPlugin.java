@@ -1,8 +1,12 @@
 package fun.sunrisemc.dontpickup;
 
+import java.util.ArrayList;
+import java.util.UUID;
+
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,6 +16,8 @@ import org.jetbrains.annotations.Nullable;
 import fun.sunrisemc.dontpickup.command.DontPickUpCommand;
 import fun.sunrisemc.dontpickup.config.Language;
 import fun.sunrisemc.dontpickup.event.PlayerJoin;
+import fun.sunrisemc.dontpickup.file.DataFile;
+import fun.sunrisemc.dontpickup.file.PlayerDataFile;
 import fun.sunrisemc.dontpickup.event.PickupItem;
 import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
 import fun.sunrisemc.dontpickup.scheduler.AutoSave;
@@ -26,6 +32,8 @@ public class DontPickUpPlugin extends JavaPlugin {
 
     public void onEnable() {
         instance = this;
+
+        applyUpdates();
 
         language = new Language();
 
@@ -92,5 +100,36 @@ public class DontPickUpPlugin extends JavaPlugin {
         }
 
         return true;
+    }
+
+    // Updates
+
+    public static void applyUpdates() {
+        // 1.2.1 -> 1.3.0 update: move player files from data folder to players folder
+        ArrayList<String> names = DataFile.getNames();
+        if (!names.isEmpty()) {
+            DontPickUpPlugin.logInfo("Updating player data files...");
+
+            for (String name : names) {
+                // Get the old file
+                YamlConfiguration configuration = DataFile.get(name);
+
+                // Create the UUID
+                UUID uuid = UUID.fromString(name);
+
+                // Rename BlockedMaterials to blocked-materials
+                if (configuration.contains("BlockedMaterials")) {
+                    configuration.set("blocked-materials", configuration.get("BlockedMaterials"));
+                    configuration.set("BlockedMaterials", null);
+                }
+
+                // Save the file
+                if (PlayerDataFile.save(uuid, configuration)) {
+                    DataFile.delete(name);
+                }
+            }
+
+            DontPickUpPlugin.logInfo("Player data files updated.");
+        }        
     }
 }
