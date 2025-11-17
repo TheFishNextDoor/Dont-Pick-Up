@@ -36,16 +36,13 @@ public class PlayerProfileManager {
         });
     }
 
-    public static void unload(@NotNull UUID id) {
-        PlayerProfile profile = playerProfiles.remove(id);
-        if (profile != null) {
-            profile.save();
-        }
-    }
-
     public static void saveAll() {
         for (PlayerProfile profile : playerProfiles.values()) {
             profile.save();
         }
+    }
+
+    protected static void unload(@NotNull UUID uuid) {
+        playerProfiles.remove(uuid);
     }
 }

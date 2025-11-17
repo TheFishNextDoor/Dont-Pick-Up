@@ -14,19 +14,27 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import fun.sunrisemc.dontpickup.DontPickUpPlugin;
-import fun.sunrisemc.dontpickup.file.DataFile;
+import fun.sunrisemc.dontpickup.file.PlayerDataFile;
 
 public class PlayerProfile {
 
-    private final @NotNull UUID id;
+    private final @NotNull UUID uuid;
 
     private @NotNull HashSet<Material> blockedMaterials = new HashSet<>();
 
     private boolean changes = false;
 
-    PlayerProfile(@NotNull Player player) {
-        this.id = player.getUniqueId();
+    protected PlayerProfile(@NotNull Player player) {
+        this.uuid = player.getUniqueId();
         load();
+    }
+
+    public @NotNull UUID getUUID() {
+        return uuid;
+    }
+
+    public boolean isOnline() {
+        return DontPickUpPlugin.getInstance().getServer().getPlayer(uuid) != null;
     }
 
     // Blocked Materials
@@ -63,7 +71,7 @@ public class PlayerProfile {
     // Loading and Saving
 
     private void load() {
-        YamlConfiguration playerFile = getPlayerFile();
+        YamlConfiguration playerFile = PlayerDataFile.get(uuid);
         
         List<String> materialNames = playerFile.getStringList("BlockedMaterials");
         for (String materialName : materialNames) {
@@ -76,7 +84,7 @@ public class PlayerProfile {
 
     public void save() {
         if (changes) {
-            YamlConfiguration playerFile = getPlayerFile();
+            YamlConfiguration playerFile = PlayerDataFile.get(uuid);
             
             ArrayList<String> materialNames = new ArrayList<>();
             for (Material material : blockedMaterials) {
@@ -85,25 +93,13 @@ public class PlayerProfile {
 
             playerFile.set("BlockedMaterials", materialNames);
 
-            if (DataFile.save(id.toString(), playerFile)) {
+            if (PlayerDataFile.save(uuid, playerFile)) {
                 changes = false;
             }
         }
 
         if (!changes && !isOnline()) {
-            PlayerProfileManager.unload(id);
+            PlayerProfileManager.unload(uuid);
         }
-    }
-
-    @NotNull
-    private YamlConfiguration getPlayerFile() {
-        String dataFileName = id.toString();
-        return DataFile.get(dataFileName);
-    }
-
-    // Utils
-
-    private boolean isOnline() {
-        return DontPickUpPlugin.getInstance().getServer().getPlayer(id) != null;
     }
 }
