@@ -3,28 +3,28 @@ package fun.sunrisemc.dontpickup.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
+import org.jetbrains.annotations.NotNull;
 
 import fun.sunrisemc.dontpickup.file.ConfigFile;
 
-import net.md_5.bungee.api.ChatColor;
-
 public class Language {
 
-    public final ArrayList<String> HELP;
-    public final ArrayList<String> MUST_BE_PLAYER;
-    public final ArrayList<String> MISSING_MATERIAL;
-    public final ArrayList<String> INVALID_MATERIAL;
-    public final ArrayList<String> PICK_UP_ALL;
-    public final ArrayList<String> PICK_UP_MATERIAL;
-    public final ArrayList<String> DONT_PICKUP_MATERIAL;
-    public final ArrayList<String> LIST_EMPTY;
-    public final ArrayList<String> BLOCKED_MATERIALS_HEADER;
-    public final ArrayList<String> BLOCKED_MATERIALS_MATERIAL;
-    public final ArrayList<String> INVALID_COMMAND;
-    public final ArrayList<String> PLUGIN_RELOADED;
+    public final @NotNull ArrayList<String> HELP;
+    public final @NotNull ArrayList<String> MUST_BE_PLAYER;
+    public final @NotNull ArrayList<String> MISSING_MATERIAL;
+    public final @NotNull ArrayList<String> INVALID_MATERIAL;
+    public final @NotNull ArrayList<String> PICK_UP_ALL;
+    public final @NotNull ArrayList<String> PICK_UP_MATERIAL;
+    public final @NotNull ArrayList<String> DONT_PICKUP_MATERIAL;
+    public final @NotNull ArrayList<String> LIST_EMPTY;
+    public final @NotNull ArrayList<String> BLOCKED_MATERIALS_HEADER;
+    public final @NotNull ArrayList<String> BLOCKED_MATERIALS_MATERIAL;
+    public final @NotNull ArrayList<String> INVALID_COMMAND;
+    public final @NotNull ArrayList<String> PLUGIN_RELOADED;
 
     public Language() {
         YamlConfiguration languageFile = ConfigFile.get("language", true);
@@ -43,7 +43,8 @@ public class Language {
         PLUGIN_RELOADED = getValue(languageFile, "plugin-reloaded");
     }
 
-    public static ArrayList<String> getValue(@NonNull YamlConfiguration config, String key) {
+    @NotNull
+    public static ArrayList<String> getValue(@NotNull YamlConfiguration config, @NotNull String key) {
         ArrayList<String> value = new ArrayList<>();
         List<String> lines = config.getStringList(key);
         for (String line : lines) {
@@ -57,8 +58,8 @@ public class Language {
         }
         return value;
     }
-
-    public static void sendMessage(@NonNull CommandSender sender, @NonNull ArrayList<String> message) {
+    
+    public static void sendMessage(@NotNull CommandSender sender, @NotNull ArrayList<String> message) {
         if (message.size() == 1 && message.get(0).isEmpty()) {
             return;
         }
@@ -67,7 +68,8 @@ public class Language {
         }
     }
 
-    public static ArrayList<String> replaceVariable(@NonNull ArrayList<String> in, @NonNull String variable, @NonNull String replacement) {
+    @NotNull
+    public static ArrayList<String> replaceVariable(@NotNull ArrayList<String> in, @NotNull String variable, @NotNull String replacement) {
         ArrayList<String> out = new ArrayList<>();
         for (String line : in) {
             out.add(line.replace(variable, replacement));

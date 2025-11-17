@@ -12,6 +12,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+
 import org.jetbrains.annotations.NotNull;
 
 import fun.sunrisemc.dontpickup.DontPickUpPlugin;
