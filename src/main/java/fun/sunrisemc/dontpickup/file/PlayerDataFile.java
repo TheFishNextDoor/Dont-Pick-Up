@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.UUID;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+
 import org.jetbrains.annotations.NotNull;
 
 import fun.sunrisemc.dontpickup.DontPickUpPlugin;

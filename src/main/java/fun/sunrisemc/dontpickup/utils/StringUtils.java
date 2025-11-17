@@ -3,6 +3,7 @@ package fun.sunrisemc.dontpickup.utils;
 import java.util.Optional;
 
 import org.bukkit.Material;
+
 import org.jetbrains.annotations.NotNull;
 
 public class StringUtils {

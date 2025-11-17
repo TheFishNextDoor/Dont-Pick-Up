@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
+
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerUtils {
