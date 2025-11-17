@@ -3,6 +3,7 @@ package fun.sunrisemc.dontpickup.command;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -20,6 +21,7 @@ import fun.sunrisemc.dontpickup.config.Language;
 import fun.sunrisemc.dontpickup.permission.Permissions;
 import fun.sunrisemc.dontpickup.player.PlayerProfile;
 import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
+import fun.sunrisemc.dontpickup.utils.StringUtils;
 
 public class DontPickUpCommand implements CommandExecutor, TabCompleter {
 
@@ -82,16 +84,22 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
 
         // List
         if (subCommand.equals("list")) {
-            ArrayList<String> notPickingUp = getBlockedMaterialsAsStrings(player);
+            // Get player profile
+            PlayerProfile playerProfile = PlayerProfileManager.get(player);
+
+            // Get blocked materials
+            Set<Material> notPickingUp = playerProfile.getBlockedMaterials();
             if (notPickingUp.size() == 0) {
                 Language.sendMessage(player, language.LIST_EMPTY);
                 return true;
             }
 
+            // List blocked materials
             Language.sendMessage(player, language.BLOCKED_MATERIALS_HEADER);
-            for (String material : notPickingUp) {
-                String materialNameFormatted = titleCase(material);
-                Language.sendMessage(player, Language.replaceVariable(language.BLOCKED_MATERIALS_MATERIAL, "<material>", materialNameFormatted));
+            for (Material material : notPickingUp) {
+                String materialName = StringUtils.formatMaterial(material);
+                ArrayList<String> message = Language.replaceVariable(language.BLOCKED_MATERIALS_MATERIAL, "<material>", materialName);
+                Language.sendMessage(player, message);
             }
             return true;
         }
@@ -106,7 +114,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
                     Language.sendMessage(player, language.PICK_UP_ALL);
                     return true;
                 }
-                material = parseMaterial(materialInput);
+                material = StringUtils.parseMaterial(materialInput);
             }
             else {
                 material = getMaterialInHand(player);
@@ -119,7 +127,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
 
             // Remove from blocked material list and notify player
             PlayerProfileManager.get(player).pickUp(material.get());
-            String materialName = formatMaterial(material.get());
+            String materialName = StringUtils.formatMaterial(material.get());
             Language.sendMessage(player, Language.replaceVariable(language.PICK_UP_MATERIAL, "<material>", materialName));
             return true;
         }
@@ -128,7 +136,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
             // Determine material
             Optional<Material> material;
             if (args.length >= 2) {
-                material = parseMaterial(args[1]);
+                material = StringUtils.parseMaterial(args[1]);
             }
             else {
                 material = getMaterialInHand(player);
@@ -141,7 +149,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
 
             // Add to blocked material list and notify player
             PlayerProfileManager.get(player).dontPickUp(material.get());
-            String materialName = formatMaterial(material.get());
+            String materialName = StringUtils.formatMaterial(material.get());
             Language.sendMessage(player, Language.replaceVariable(language.DONT_PICKUP_MATERIAL, "<material>", materialName));
             return true;
         }
@@ -181,22 +189,6 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
         return allowed;
     }
 
-    @NotNull
-    public static String formatMaterial(@NotNull Material material) {
-        return titleCase(material.name());
-    }
-
-    @NotNull
-    private static String titleCase(@NotNull String str) {
-        str = str.replace("_", " ");
-        String[] words = str.split(" ");
-        String titleCase = "";
-        for (String word : words) {
-            titleCase += word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase() + " ";
-        }
-        return titleCase.trim();
-    }
-
     private static Optional<Material> getMaterialInHand(@NotNull Player player) {
         PlayerInventory inventory = player.getInventory();
 
@@ -213,18 +205,5 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
         return Optional.empty();
     }
 
-    private static Optional<Material> parseMaterial(@NotNull String str) {
-        String materialBName = normalize(str);
-        for (Material material : Material.values()) {
-            if (normalize(material.name()).equals(materialBName)) {
-                return Optional.of(material);
-            }
-        }
-        return Optional.empty();
-    }
 
-    @NotNull
-    private static String normalize(@NotNull String str) {
-        return str.trim().toLowerCase().replace(" ", "").replace("_", "").replace("-", "");
-    }
 }

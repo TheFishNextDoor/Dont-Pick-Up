@@ -1,8 +1,10 @@
 package fun.sunrisemc.dontpickup.player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Material;
@@ -51,6 +53,11 @@ public class PlayerProfile {
             blockedMaterials.clear();
             changes = true;
         }
+    }
+
+    @NotNull
+    public Set<Material> getBlockedMaterials() {
+        return Collections.unmodifiableSet(blockedMaterials);
     }
 
     // Loading and Saving
