@@ -2,6 +2,7 @@ package fun.sunrisemc.dontpickup.command;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -10,7 +11,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.bukkit.inventory.PlayerInventory;
+import org.jetbrains.annotations.NotNull;
 
 import fun.sunrisemc.dontpickup.DontPickUpPlugin;
 import fun.sunrisemc.dontpickup.config.Language;
@@ -21,13 +23,14 @@ import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
 public class DontPickUpCommand implements CommandExecutor, TabCompleter {
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String @NotNull [] args) {
         if (!(sender instanceof Player)) {
             return null;
         }
 
         Player player = (Player) sender;
 
+        // /dontpickup <subcommand>
         if (args.length == 1) {
             if (sender.hasPermission(Permissions.RELOAD_PERMISSION)) {
                 return List.of("add", "remove", "list", "reload");
@@ -38,9 +41,12 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
         }
         else if (args.length >= 2) {
             String subCommand = args[0];
+
+            // /dontpickup add [material]
             if (subCommand.equalsIgnoreCase("add")) {
                 return getAllowedMaterialsAsStrings(player);
             }
+            // /dontpickup remove [material]
             else if (subCommand.equalsIgnoreCase("remove")) {
                 ArrayList<String> notPickingUp = getBlockedMaterialsAsStrings(player);
                 notPickingUp.add("all");
@@ -52,7 +58,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args) {
         Language language = DontPickUpPlugin.getLanguage();
 
         if (!(sender instanceof Player)) {
@@ -62,15 +68,15 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
 
         Player player = (Player) sender;
 
-        // Help //
-        if (args.length < 1 || args[0].equalsIgnoreCase("help")) {
+        // Help
+        if (args.length < 1) {
             Language.sendMessage(player, language.HELP);
             return true;
         }
 
         String subCommand = args[0];
 
-        // List //
+        // List
         if (subCommand.equals("list")) {
             ArrayList<String> notPickingUp = getBlockedMaterialsAsStrings(player);
             if (notPickingUp.size() == 0) {
@@ -85,77 +91,69 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
             }
             return true;
         }
-        // Remove //
+        // Remove
         else if (subCommand.equals("remove")) {
-            String materialName = materialName(player, args);
-            if (materialName == null) {
+            // Determine material
+            Optional<Material> material;
+            if (args.length >= 2) {
+                String materialInput = args[1];
+                if (materialInput.equalsIgnoreCase("all")) {
+                    PlayerProfileManager.get(player).pickUpAll();
+                    Language.sendMessage(player, language.PICK_UP_ALL);
+                    return true;
+                }
+                material = parseMaterial(materialInput);
+            }
+            else {
+                material = getMaterialInHand(player);
+            }
+
+            if (material.isEmpty()) {
                 Language.sendMessage(player, language.MISSING_MATERIAL);
                 return true;
             }
 
-            if (materialName.equalsIgnoreCase("all")) {
-                PlayerProfileManager.get(player).pickUpAll();
-                Language.sendMessage(player, language.PICK_UP_ALL);
-                return true;
-            }
-
-            Material material = Material.matchMaterial(materialName);
-            if (material == null) {
-                Language.sendMessage(player, language.INVALID_MATERIAL);
-                return true;
-            }
-
-            PlayerProfileManager.get(player).pickUp(material);
-            String materialNameFormatted = materialName.toLowerCase().replaceAll("_", " ");
-            Language.sendMessage(player, Language.replaceVariable(language.PICK_UP_MATERIAL, "<material>", materialNameFormatted));
+            // Remove from blocked material list and notify player
+            PlayerProfileManager.get(player).pickUp(material.get());
+            String materialName = formatMaterial(material.get());
+            Language.sendMessage(player, Language.replaceVariable(language.PICK_UP_MATERIAL, "<material>", materialName));
             return true;
         }
-        // Add //
+        // Add
         else if (subCommand.equals("add")) {
-            String materialName = materialName(player, args);
-            if (materialName == null) {
+            // Determine material
+            Optional<Material> material;
+            if (args.length >= 2) {
+                material = parseMaterial(args[1]);
+            }
+            else {
+                material = getMaterialInHand(player);
+            }
+
+            if (material.isEmpty()) {
                 Language.sendMessage(player, language.MISSING_MATERIAL);
                 return true;
             }
-            
-            Material material = Material.matchMaterial(materialName);
-            if (material == null) {
-                Language.sendMessage(player, language.INVALID_MATERIAL);
-                return true;
-            }
 
-            PlayerProfileManager.get(player).dontPickUp(material);
-            String materialNameFormatted = materialName.toLowerCase().replaceAll("_", " ");
-            Language.sendMessage(player, Language.replaceVariable(language.DONT_PICKUP_MATERIAL, "<material>", materialNameFormatted));
+            // Add to blocked material list and notify player
+            PlayerProfileManager.get(player).dontPickUp(material.get());
+            String materialName = formatMaterial(material.get());
+            Language.sendMessage(player, Language.replaceVariable(language.DONT_PICKUP_MATERIAL, "<material>", materialName));
             return true;
         }
-        // Reload //
+        // Reload
         else if (subCommand.equals("reload") && player.hasPermission(Permissions.RELOAD_PERMISSION)) {
             DontPickUpPlugin.loadConfigs();
             Language.sendMessage(player, language.PLUGIN_RELOADED);
             return true;
         }
 
-        Language.sendMessage(player, language.INVALID_COMMAND);
+        Language.sendMessage(player, language.HELP);
         return true;
     }
 
-    private static String materialName(@NonNull Player player, @NonNull String[] args) {
-        if (args.length < 2) {
-            ItemStack hand = player.getInventory().getItemInMainHand();
-            ItemStack offHand = player.getInventory().getItemInOffHand();
-            ItemStack item = hand.getType() == Material.AIR ? offHand : hand;
-            if (item.getType() == Material.AIR) {
-                return null;
-            }
-            return item.getType().name();
-        }
-        else {
-            return args[1];
-        }
-    }
-
-    private static ArrayList<String> getBlockedMaterialsAsStrings(@NonNull Player player) {
+    @NotNull
+    private static ArrayList<String> getBlockedMaterialsAsStrings(@NotNull Player player) {
         ArrayList<String> blocked = new ArrayList<>();
         PlayerProfile trackedPlayer = PlayerProfileManager.get(player);
         for (Material material : Material.values()) {
@@ -166,7 +164,8 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
         return blocked;
     }
 
-    private static ArrayList<String> getAllowedMaterialsAsStrings(@NonNull Player player) {
+    @NotNull
+    private static ArrayList<String> getAllowedMaterialsAsStrings(@NotNull Player player) {
         ArrayList<String> allowed = new ArrayList<>();
         PlayerProfile trackedPlayer = PlayerProfileManager.get(player);
         for (Material material : Material.values()) {
@@ -177,7 +176,13 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
         return allowed;
     }
 
-    private static String titleCase(@NonNull String str) {
+    @NotNull
+    public static String formatMaterial(@NotNull Material material) {
+        return titleCase(material.name());
+    }
+
+    @NotNull
+    private static String titleCase(@NotNull String str) {
         str = str.replace("_", " ");
         String[] words = str.split(" ");
         String titleCase = "";
@@ -185,5 +190,36 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
             titleCase += word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase() + " ";
         }
         return titleCase.trim();
+    }
+
+    private static Optional<Material> getMaterialInHand(@NotNull Player player) {
+        PlayerInventory inventory = player.getInventory();
+
+        ItemStack main = inventory.getItemInMainHand();
+        if (main != null && main.getAmount() > 0 && !main.getType().isAir()) {
+            return Optional.of(main.getType());
+        }
+
+        ItemStack off = inventory.getItemInOffHand();
+        if (off != null && off.getAmount() > 0 && !off.getType().isAir()) {
+            return Optional.of(off.getType());
+        }
+
+        return Optional.empty();
+    }
+
+    private static Optional<Material> parseMaterial(@NotNull String str) {
+        String materialBName = normalize(str);
+        for (Material material : Material.values()) {
+            if (normalize(material.name()).equals(materialBName)) {
+                return Optional.of(material);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @NotNull
+    private static String normalize(@NotNull String str) {
+        return str.trim().toLowerCase().replace(" ", "").replace("_", "").replace("-", "");
     }
 }

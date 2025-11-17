@@ -46,9 +46,6 @@ public class Language {
     public static ArrayList<String> getValue(@NonNull YamlConfiguration config, String key) {
         ArrayList<String> value = new ArrayList<>();
         List<String> lines = config.getStringList(key);
-        if (lines == null) {
-            return value;
-        }
         for (String line : lines) {
             value.add(ChatColor.translateAlternateColorCodes('&', line));
         }
