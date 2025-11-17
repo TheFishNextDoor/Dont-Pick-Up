@@ -47,12 +47,28 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
 
             // /dontpickup add [material]
             if (subCommand.equalsIgnoreCase("add")) {
-                return getAllowedMaterialsAsStrings(player);
+                PlayerProfile playerProfile = PlayerProfileManager.get(player);
+
+                ArrayList<String> pickingUp = new ArrayList<>();
+                for (Material material : Material.values()) {
+                    if (playerProfile.canPickUp(material)) {
+                        String materialName = StringUtils.formatMaterial(material);
+                        pickingUp.add(materialName);
+                    }
+                }
+                return pickingUp;
             }
             // /dontpickup remove [material]
             else if (subCommand.equalsIgnoreCase("remove")) {
-                ArrayList<String> notPickingUp = getBlockedMaterialsAsStrings(player);
+                PlayerProfile playerProfile = PlayerProfileManager.get(player);
+
+                ArrayList<String> notPickingUp = new ArrayList<>();
+                for (Material material : playerProfile.getBlockedMaterials()) {
+                    String materialName = StringUtils.formatMaterial(material);
+                    notPickingUp.add(materialName);
+                }
                 notPickingUp.add("all");
+
                 return notPickingUp;
             }
         }
@@ -119,6 +135,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
                 material = PlayerUtils.getMaterialInHand(player);
             }
 
+            // Check material
             if (material.isEmpty()) {
                 Language.sendMessage(player, language.MISSING_MATERIAL);
                 return true;
@@ -141,6 +158,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
                 material = PlayerUtils.getMaterialInHand(player);
             }
 
+            // Check material
             if (material.isEmpty()) {
                 Language.sendMessage(player, language.MISSING_MATERIAL);
                 return true;
@@ -162,29 +180,5 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
         // Unknown subcommand
         Language.sendMessage(player, language.HELP);
         return true;
-    }
-
-    @NotNull
-    private static ArrayList<String> getBlockedMaterialsAsStrings(@NotNull Player player) {
-        ArrayList<String> blocked = new ArrayList<>();
-        PlayerProfile trackedPlayer = PlayerProfileManager.get(player);
-        for (Material material : Material.values()) {
-            if (!trackedPlayer.canPickUp(material)) {
-                blocked.add(material.name().toLowerCase());
-            }
-        }
-        return blocked;
-    }
-
-    @NotNull
-    private static ArrayList<String> getAllowedMaterialsAsStrings(@NotNull Player player) {
-        ArrayList<String> allowed = new ArrayList<>();
-        PlayerProfile trackedPlayer = PlayerProfileManager.get(player);
-        for (Material material : Material.values()) {
-            if (trackedPlayer.canPickUp(material)) {
-                allowed.add(material.name().toLowerCase());
-            }
-        }
-        return allowed;
     }
 }
