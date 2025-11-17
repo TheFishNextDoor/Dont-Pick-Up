@@ -3,41 +3,47 @@ package fun.sunrisemc.dontpickup.file;
 import java.io.File;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
+import org.jetbrains.annotations.NotNull;
 
 import fun.sunrisemc.dontpickup.DontPickUpPlugin;
 
 public class DataFile {
 
-    public static YamlConfiguration get(@NonNull String name) {
+    @NotNull
+    public static YamlConfiguration get(@NotNull String name) {
         File dataFile = new File(getFolder(), name + ".yml");
         if (!dataFile.exists()) {
             try {
                 dataFile.createNewFile();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
+                DontPickUpPlugin.logWarning("Failed to create data file for " + name + ".yml.");
                 e.printStackTrace();
+                return new YamlConfiguration();
             }
         }
-        return YamlConfiguration.loadConfiguration(dataFile);
+        
+        YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(dataFile);
+        return yamlConfiguration;
     }
 
-    public static boolean save(@NonNull String name, @NonNull YamlConfiguration data) {
+    public static boolean save(@NotNull String name, @NotNull YamlConfiguration data) {
         File dataFile = new File(getFolder(), name + ".yml");
         try {
             data.save(dataFile);
-        } 
+            return true;
+        }
         catch (Exception e) {
+            DontPickUpPlugin.logWarning("Failed to save data file for " + name + ".yml.");
             e.printStackTrace();
             return false;
         }
-        return true;
     }
 
-    private static File getFolder() {
-        File pluginFolder = DontPickUpPlugin.getInstance().getDataFolder();
-        if (!pluginFolder.exists()) {
-            pluginFolder.mkdirs();
-        }
+    @NotNull
+    public static File getFolder() {
+        File pluginFolder = ConfigFile.getFolder();
 
         File dataFolder = new File(pluginFolder, "data");
         if (!dataFolder.exists()) {
@@ -45,5 +51,5 @@ public class DataFile {
         }
 
         return dataFolder;
-    }   
+    }
 }
