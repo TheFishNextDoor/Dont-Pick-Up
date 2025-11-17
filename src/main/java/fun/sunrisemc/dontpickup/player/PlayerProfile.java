@@ -9,19 +9,20 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import fun.sunrisemc.dontpickup.DontPickUpPlugin;
 import fun.sunrisemc.dontpickup.file.DataFile;
 
 public class PlayerProfile {
 
-    private final UUID id;
+    private final @NotNull UUID id;
 
-    private HashSet<Material> dontPickUp = new HashSet<>();
+    private @NotNull HashSet<Material> dontPickUp = new HashSet<>();
 
     private boolean changes = false;
 
-    PlayerProfile(@NonNull Player player) {
+    PlayerProfile(@NotNull Player player) {
         this.id = player.getUniqueId();
 
         YamlConfiguration playerFile = getPlayerFile();
@@ -37,18 +38,18 @@ public class PlayerProfile {
         }
     }
 
-    public boolean canPickUp(@NonNull Material material) {
+    public boolean canPickUp(@NotNull Material material) {
         return !dontPickUp.contains(material);
     }
 
-    public void dontPickUp(@NonNull Material material) {
+    public void dontPickUp(@NotNull Material material) {
         if (!dontPickUp.contains(material)) {
             dontPickUp.add(material);
             changes = true;
         }
     }
 
-    public void pickUp(@NonNull Material material) {
+    public void pickUp(@NotNull Material material) {
         if (dontPickUp.remove(material)) {
             changes = true;
         }
@@ -86,6 +87,7 @@ public class PlayerProfile {
         return DontPickUpPlugin.getInstance().getServer().getPlayer(id) != null;
     }
 
+    @NotNull
     private YamlConfiguration getPlayerFile() {
         return DataFile.get(id.toString());
     }

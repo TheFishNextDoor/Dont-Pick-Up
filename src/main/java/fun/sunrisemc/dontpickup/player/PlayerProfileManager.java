@@ -10,9 +10,10 @@ import fun.sunrisemc.dontpickup.DontPickUpPlugin;
 
 public class PlayerProfileManager {
 
-    private static ConcurrentHashMap<UUID, PlayerProfile> playerProfiles = new ConcurrentHashMap<UUID, PlayerProfile>();
+    private static @NotNull ConcurrentHashMap<UUID, PlayerProfile> playerProfiles = new ConcurrentHashMap<UUID, PlayerProfile>();
 
-    public static PlayerProfile get(@NonNull Player player) {
+    @NotNull
+    public static PlayerProfile get(@NotNull Player player) {
         PlayerProfile profile = playerProfiles.get(player.getUniqueId());
         if (profile == null) {
             profile = new PlayerProfile(player);
@@ -21,7 +22,7 @@ public class PlayerProfileManager {
         return profile;
     }
 
-    public static void preLoad(@NonNull final Player player) {
+    public static void preLoad(@NotNull final Player player) {
         DontPickUpPlugin plugin = DontPickUpPlugin.getInstance();
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
     
@@ -33,7 +34,7 @@ public class PlayerProfileManager {
         });
     }
 
-    public static void unload(@NonNull UUID id) {
+    public static void unload(@NotNull UUID id) {
         PlayerProfile profile = playerProfiles.remove(id);
         if (profile != null) {
             profile.save();
