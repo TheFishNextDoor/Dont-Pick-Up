@@ -60,20 +60,24 @@ public class Language {
     }
     
     public static void sendMessage(@NotNull CommandSender sender, @NotNull ArrayList<String> message) {
+        // Don't send empty messages
         if (message.size() == 1 && message.get(0).isEmpty()) {
             return;
         }
+        
+        // Send each line of the message
         for (String line : message) {
             sender.sendMessage(line);
         }
     }
 
     @NotNull
-    public static ArrayList<String> replaceVariable(@NotNull ArrayList<String> in, @NotNull String variable, @NotNull String replacement) {
-        ArrayList<String> out = new ArrayList<>();
-        for (String line : in) {
-            out.add(line.replace(variable, replacement));
+    public static ArrayList<String> replaceVariable(@NotNull ArrayList<String> messageIn, @NotNull String variable, @NotNull String replacement) {
+        ArrayList<String> messageOut = new ArrayList<>();
+        for (String line : messageIn) {
+            String modifiedLine = line.replace(variable, replacement);
+            messageOut.add(modifiedLine);
         }
-        return out;
+        return messageOut;
     }
 }
