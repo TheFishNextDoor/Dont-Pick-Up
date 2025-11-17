@@ -73,7 +73,7 @@ public class PlayerProfile {
     private void load() {
         YamlConfiguration playerFile = PlayerDataFile.get(uuid);
         
-        List<String> materialNames = playerFile.getStringList("BlockedMaterials");
+        List<String> materialNames = playerFile.getStringList("blocked-materials");
         for (String materialName : materialNames) {
             Material material = Material.getMaterial(materialName);
             if (material != null) {
@@ -91,7 +91,7 @@ public class PlayerProfile {
                 materialNames.add(material.name());
             }
 
-            playerFile.set("BlockedMaterials", materialNames);
+            playerFile.set("blocked-materials", materialNames);
 
             if (PlayerDataFile.save(uuid, playerFile)) {
                 changes = false;
