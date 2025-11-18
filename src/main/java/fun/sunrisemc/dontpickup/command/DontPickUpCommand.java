@@ -52,7 +52,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
                 ArrayList<String> pickingUp = new ArrayList<>();
                 for (Material material : Material.values()) {
                     if (playerProfile.canPickUp(material)) {
-                        String materialName = StringUtils.formatMaterial(material);
+                        String materialName = material.name().toLowerCase().replace(" ", "").replace("_", "-");
                         pickingUp.add(materialName);
                     }
                 }
@@ -64,7 +64,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
 
                 ArrayList<String> notPickingUp = new ArrayList<>();
                 for (Material material : playerProfile.getBlockedMaterials()) {
-                    String materialName = StringUtils.formatMaterial(material);
+                    String materialName = material.name().toLowerCase().replace(" ", "").replace("_", "-");
                     notPickingUp.add(materialName);
                 }
                 notPickingUp.add("all");
