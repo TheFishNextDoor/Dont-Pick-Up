@@ -51,7 +51,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
 
                 ArrayList<String> pickingUp = new ArrayList<>();
                 for (Material material : Material.values()) {
-                    if (playerProfile.canPickUp(material)) {
+                    if (playerProfile.canPickupMaterial(material)) {
                         String materialName = material.name().toLowerCase().replace(" ", "").replace("_", "-");
                         pickingUp.add(materialName);
                     }
@@ -125,7 +125,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
             if (args.length >= 2) {
                 String materialInput = args[1];
                 if (materialInput.equalsIgnoreCase("all")) {
-                    PlayerProfileManager.get(player).pickUpAll();
+                    PlayerProfileManager.get(player).unblockAllMaterials();
                     LanguageConfig.sendMessage(player, languageConfig.PICK_UP_ALL);
                     return true;
                 }
@@ -142,7 +142,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
             }
 
             // Remove from blocked material list and notify player
-            PlayerProfileManager.get(player).pickUp(material.get());
+            PlayerProfileManager.get(player).unblockMaterial(material.get());
             String materialName = StringUtils.formatMaterial(material.get());
             LanguageConfig.sendMessage(player, LanguageConfig.replaceVariable(languageConfig.PICK_UP_MATERIAL, "<material>", materialName));
             return true;
@@ -165,7 +165,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
             }
 
             // Add to blocked material list and notify player
-            PlayerProfileManager.get(player).dontPickUp(material.get());
+            PlayerProfileManager.get(player).blockMaterial(material.get());
             String materialName = StringUtils.formatMaterial(material.get());
             LanguageConfig.sendMessage(player, LanguageConfig.replaceVariable(languageConfig.DONT_PICKUP_MATERIAL, "<material>", materialName));
             return true;

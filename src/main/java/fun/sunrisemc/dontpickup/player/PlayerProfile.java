@@ -39,24 +39,24 @@ public class PlayerProfile {
 
     // Blocked Materials
 
-    public boolean canPickUp(@NotNull Material material) {
+    public boolean canPickupMaterial(@NotNull Material material) {
         return !blockedMaterials.contains(material);
     }
 
-    public void dontPickUp(@NotNull Material material) {
+    public void blockMaterial(@NotNull Material material) {
         if (!blockedMaterials.contains(material)) {
             blockedMaterials.add(material);
             changes = true;
         }
     }
 
-    public void pickUp(@NotNull Material material) {
+    public void unblockMaterial(@NotNull Material material) {
         if (blockedMaterials.remove(material)) {
             changes = true;
         }
     }
 
-    public void pickUpAll() {
+    public void unblockAllMaterials() {
         if (!blockedMaterials.isEmpty()) {
             blockedMaterials.clear();
             changes = true;

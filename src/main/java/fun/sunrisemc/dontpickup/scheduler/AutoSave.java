@@ -30,5 +30,5 @@ public class AutoSave {
             DontPickUpPlugin.getInstance().getServer().getScheduler().cancelTask(autoSaveTaskId);
             autoSaveTaskId = -1;
         }   
-    }   
+    }
 }
