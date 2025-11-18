@@ -51,13 +51,13 @@ public class DontPickUpPlugin extends JavaPlugin {
 
         AutoSave.start();
 
-        logInfo("Plugin enabled");
+        logInfo("Plugin enabled.");
     }
 
     public void onDisable() {
         AutoSave.stop();
         PlayerProfileManager.saveAll();
-        logInfo("Plugin disabled");
+        logInfo("Plugin disabled.");
     }
 
     // Instances
