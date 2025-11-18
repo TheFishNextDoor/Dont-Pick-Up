@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import fun.sunrisemc.dontpickup.DontPickUpPlugin;
-import fun.sunrisemc.dontpickup.config.Language;
+import fun.sunrisemc.dontpickup.config.LanguageConfig;
 import fun.sunrisemc.dontpickup.permission.Permissions;
 import fun.sunrisemc.dontpickup.player.PlayerProfile;
 import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
@@ -79,11 +79,11 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args) {
         // Get language
-        Language language = DontPickUpPlugin.getLanguage();
+        LanguageConfig languageConfig = DontPickUpPlugin.getLanguageConfig();
 
         // Get player
         if (!(sender instanceof Player)) {
-            Language.sendMessage(sender, language.MUST_BE_PLAYER);
+            LanguageConfig.sendMessage(sender, languageConfig.MUST_BE_PLAYER);
             return true;
         }
 
@@ -91,7 +91,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
 
         // Get the subcommand
         if (args.length < 1) {
-            Language.sendMessage(player, language.HELP);
+            LanguageConfig.sendMessage(player, languageConfig.HELP);
             return true;
         }
 
@@ -105,16 +105,16 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
             // Get blocked materials
             Set<Material> notPickingUp = playerProfile.getBlockedMaterials();
             if (notPickingUp.size() == 0) {
-                Language.sendMessage(player, language.LIST_EMPTY);
+                LanguageConfig.sendMessage(player, languageConfig.BLOCKED_MATERIALS_LIST_EMPTY);
                 return true;
             }
 
             // List blocked materials
-            Language.sendMessage(player, language.BLOCKED_MATERIALS_HEADER);
+            LanguageConfig.sendMessage(player, languageConfig.BLOCKED_MATERIALS_HEADER);
             for (Material material : notPickingUp) {
                 String materialName = StringUtils.formatMaterial(material);
-                ArrayList<String> message = Language.replaceVariable(language.BLOCKED_MATERIALS_MATERIAL, "<material>", materialName);
-                Language.sendMessage(player, message);
+                ArrayList<String> message = LanguageConfig.replaceVariable(languageConfig.BLOCKED_MATERIALS_MATERIAL, "<material>", materialName);
+                LanguageConfig.sendMessage(player, message);
             }
             return true;
         }
@@ -126,7 +126,7 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
                 String materialInput = args[1];
                 if (materialInput.equalsIgnoreCase("all")) {
                     PlayerProfileManager.get(player).pickUpAll();
-                    Language.sendMessage(player, language.PICK_UP_ALL);
+                    LanguageConfig.sendMessage(player, languageConfig.PICK_UP_ALL);
                     return true;
                 }
                 material = StringUtils.parseMaterial(materialInput);
@@ -137,14 +137,14 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
 
             // Check material
             if (material.isEmpty()) {
-                Language.sendMessage(player, language.MISSING_MATERIAL);
+                LanguageConfig.sendMessage(player, languageConfig.MISSING_MATERIAL);
                 return true;
             }
 
             // Remove from blocked material list and notify player
             PlayerProfileManager.get(player).pickUp(material.get());
             String materialName = StringUtils.formatMaterial(material.get());
-            Language.sendMessage(player, Language.replaceVariable(language.PICK_UP_MATERIAL, "<material>", materialName));
+            LanguageConfig.sendMessage(player, LanguageConfig.replaceVariable(languageConfig.PICK_UP_MATERIAL, "<material>", materialName));
             return true;
         }
         // Add
@@ -160,25 +160,25 @@ public class DontPickUpCommand implements CommandExecutor, TabCompleter {
 
             // Check material
             if (material.isEmpty()) {
-                Language.sendMessage(player, language.MISSING_MATERIAL);
+                LanguageConfig.sendMessage(player, languageConfig.MISSING_MATERIAL);
                 return true;
             }
 
             // Add to blocked material list and notify player
             PlayerProfileManager.get(player).dontPickUp(material.get());
             String materialName = StringUtils.formatMaterial(material.get());
-            Language.sendMessage(player, Language.replaceVariable(language.DONT_PICKUP_MATERIAL, "<material>", materialName));
+            LanguageConfig.sendMessage(player, LanguageConfig.replaceVariable(languageConfig.DONT_PICKUP_MATERIAL, "<material>", materialName));
             return true;
         }
         // Reload
         else if (subCommand.equals("reload") && player.hasPermission(Permissions.RELOAD_PERMISSION)) {
             DontPickUpPlugin.reload();
-            Language.sendMessage(player, language.PLUGIN_RELOADED);
+            LanguageConfig.sendMessage(player, languageConfig.PLUGIN_RELOADED);
             return true;
         }
 
         // Unknown subcommand
-        Language.sendMessage(player, language.HELP);
+        LanguageConfig.sendMessage(player, languageConfig.HELP);
         return true;
     }
 }

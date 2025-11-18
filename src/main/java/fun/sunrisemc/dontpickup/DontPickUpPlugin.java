@@ -14,19 +14,25 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import fun.sunrisemc.dontpickup.command.DontPickUpCommand;
-import fun.sunrisemc.dontpickup.config.Language;
+import fun.sunrisemc.dontpickup.config.LanguageConfig;
 import fun.sunrisemc.dontpickup.event.PlayerJoin;
+import fun.sunrisemc.dontpickup.file.ConfigFile;
 import fun.sunrisemc.dontpickup.file.DataFile;
 import fun.sunrisemc.dontpickup.file.PlayerDataFile;
 import fun.sunrisemc.dontpickup.event.PickupItem;
 import fun.sunrisemc.dontpickup.player.PlayerProfileManager;
 import fun.sunrisemc.dontpickup.scheduler.AutoSave;
+import fun.sunrisemc.dontpickup.utils.YAMLUtils;
 
 public class DontPickUpPlugin extends JavaPlugin {
 
+    // Plugin Instance
+
     private static @Nullable DontPickUpPlugin instance;
 
-    private static @Nullable Language language;
+    // Configs
+
+    private static @Nullable LanguageConfig languageConfig;
 
     // Java Plugin
 
@@ -35,7 +41,7 @@ public class DontPickUpPlugin extends JavaPlugin {
 
         applyUpdates();
 
-        language = new Language();
+        languageConfig = new LanguageConfig();
 
         registerCommand("dontpickup", new DontPickUpCommand());
 
@@ -60,14 +66,14 @@ public class DontPickUpPlugin extends JavaPlugin {
         return instance;
     }
 
-    public static Language getLanguage() {
-        return language;
+    public static LanguageConfig getLanguageConfig() {
+        return languageConfig;
     }
 
     // Reloading
 
     public static void reload() {
-        language = new Language();
+        languageConfig = new LanguageConfig();
     }
 
     // Logging
@@ -105,10 +111,10 @@ public class DontPickUpPlugin extends JavaPlugin {
     // Updates
 
     public static void applyUpdates() {
-        // 1.2.1 -> 1.3.0 update: move player files from data folder to players folder
+        // 1.2.1 -> 1.3.0: Player data files moved to new folder and format changed
         ArrayList<String> names = DataFile.getNames();
         if (!names.isEmpty()) {
-            DontPickUpPlugin.logInfo("Updating player data files...");
+            DontPickUpPlugin.logInfo("Updating player data files to new 1.3.0 format...");
 
             for (String name : names) {
                 // Get the old file
@@ -129,7 +135,14 @@ public class DontPickUpPlugin extends JavaPlugin {
                 }
             }
 
-            DontPickUpPlugin.logInfo("Player data files updated.");
-        }        
+            DontPickUpPlugin.logInfo("Player data files updated to 1.3.0 format.");
+        }
+
+        // 1.2.1 -> 1.3.0: Language file key updates
+        YamlConfiguration oldLanguageConfig = ConfigFile.get("language", false);
+        if (YAMLUtils.renameKeyIfExists(oldLanguageConfig, "list-empty", "blocked-materials-list-empty")) {
+            ConfigFile.save("language", oldLanguageConfig);
+            DontPickUpPlugin.logInfo("Language file updated to 1.3.0 format.");
+        }
     }
 }

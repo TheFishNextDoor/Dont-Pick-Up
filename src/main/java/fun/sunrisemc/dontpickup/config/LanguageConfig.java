@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import fun.sunrisemc.dontpickup.file.ConfigFile;
 
-public class Language {
+public class LanguageConfig {
 
     public final @NotNull ArrayList<String> HELP;
     public final @NotNull ArrayList<String> MUST_BE_PLAYER;
@@ -20,27 +20,27 @@ public class Language {
     public final @NotNull ArrayList<String> PICK_UP_ALL;
     public final @NotNull ArrayList<String> PICK_UP_MATERIAL;
     public final @NotNull ArrayList<String> DONT_PICKUP_MATERIAL;
-    public final @NotNull ArrayList<String> LIST_EMPTY;
+    public final @NotNull ArrayList<String> BLOCKED_MATERIALS_LIST_EMPTY;
     public final @NotNull ArrayList<String> BLOCKED_MATERIALS_HEADER;
     public final @NotNull ArrayList<String> BLOCKED_MATERIALS_MATERIAL;
     public final @NotNull ArrayList<String> INVALID_COMMAND;
     public final @NotNull ArrayList<String> PLUGIN_RELOADED;
 
-    public Language() {
-        YamlConfiguration languageFile = ConfigFile.get("language", true);
+    public LanguageConfig() {
+        YamlConfiguration languageConfig = ConfigFile.get("language", true);
 
-        HELP = getValue(languageFile, "help");
-        MUST_BE_PLAYER = getValue(languageFile, "must-be-player");
-        MISSING_MATERIAL = getValue(languageFile, "missing-material");
-        INVALID_MATERIAL = getValue(languageFile, "invalid-material");
-        PICK_UP_ALL = getValue(languageFile, "pick-up-all");
-        PICK_UP_MATERIAL = getValue(languageFile, "pick-up-material");
-        DONT_PICKUP_MATERIAL = getValue(languageFile, "dont-pickup-material");
-        LIST_EMPTY = getValue(languageFile, "list-empty");
-        BLOCKED_MATERIALS_HEADER = getValue(languageFile, "blocked-materials-header");
-        BLOCKED_MATERIALS_MATERIAL = getValue(languageFile, "blocked-materials-material");
-        INVALID_COMMAND = getValue(languageFile, "invalid-command");
-        PLUGIN_RELOADED = getValue(languageFile, "plugin-reloaded");
+        HELP = getValue(languageConfig, "help");
+        MUST_BE_PLAYER = getValue(languageConfig, "must-be-player");
+        MISSING_MATERIAL = getValue(languageConfig, "missing-material");
+        INVALID_MATERIAL = getValue(languageConfig, "invalid-material");
+        PICK_UP_ALL = getValue(languageConfig, "pick-up-all");
+        PICK_UP_MATERIAL = getValue(languageConfig, "pick-up-material");
+        DONT_PICKUP_MATERIAL = getValue(languageConfig, "dont-pickup-material");
+        BLOCKED_MATERIALS_LIST_EMPTY = getValue(languageConfig, "blocked-materials-list-empty");
+        BLOCKED_MATERIALS_HEADER = getValue(languageConfig, "blocked-materials-header");
+        BLOCKED_MATERIALS_MATERIAL = getValue(languageConfig, "blocked-materials-material");
+        INVALID_COMMAND = getValue(languageConfig, "invalid-command");
+        PLUGIN_RELOADED = getValue(languageConfig, "plugin-reloaded");
     }
 
     @NotNull
