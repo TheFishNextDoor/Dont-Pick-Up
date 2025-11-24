@@ -112,26 +112,33 @@ public class DontPickUpPlugin extends JavaPlugin {
 
     public static void applyUpdates() {
         // 1.2.1 -> 1.3.0: Player data files moved to new folder and format changed
-        ArrayList<String> names = DataFile.getNames();
-        if (!names.isEmpty()) {
+        ArrayList<String> playerDataFileNames = new ArrayList<>();
+        for (String name : DataFile.getNames()) {
+            // Check that it is a player uuid (correct length)
+            if (name.length() != 36) {
+                continue;
+            }
+
+            playerDataFileNames.add(name);
+        }
+
+        if (!playerDataFileNames.isEmpty()) {
             DontPickUpPlugin.logInfo("Updating player data files to new 1.3.0 format...");
 
-            for (String name : names) {
-                // Get the old file
-                YamlConfiguration configuration = DataFile.get(name);
+            for (String playerDataFileName : playerDataFileNames) {
+                YamlConfiguration playerData = DataFile.get(playerDataFileName);
 
-                // Create the UUID
-                UUID uuid = UUID.fromString(name);
+                UUID uuid = UUID.fromString(playerDataFileName);
 
                 // Rename BlockedMaterials to blocked-materials
-                if (configuration.contains("BlockedMaterials")) {
-                    configuration.set("blocked-materials", configuration.get("BlockedMaterials"));
-                    configuration.set("BlockedMaterials", null);
+                if (playerData.contains("BlockedMaterials")) {
+                    playerData.set("blocked-materials", playerData.get("BlockedMaterials"));
+                    playerData.set("BlockedMaterials", null);
                 }
 
-                // Save the file
-                if (PlayerDataFile.save(uuid, configuration)) {
-                    DataFile.delete(name);
+                // Save as a player data file rather than a generic data file
+                if (PlayerDataFile.save(uuid, playerData)) {
+                    DataFile.delete(playerDataFileName);
                 }
             }
 
