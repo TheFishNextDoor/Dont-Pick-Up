@@ -147,7 +147,7 @@ public class DontPickUpPlugin extends JavaPlugin {
 
         // 1.2.1 -> 1.3.0: Language file key updates
         YamlConfiguration oldLanguageConfig = ConfigFile.get("language", false);
-        if (YAMLUtils.renameKeyIfExists(oldLanguageConfig, "list-empty", "blocked-materials-list-empty")) {
+        if (YAMLUtils.renameKey(oldLanguageConfig, "list-empty", "blocked-materials-list-empty")) {
             ConfigFile.save("language", oldLanguageConfig);
             DontPickUpPlugin.logInfo("Language file updated to 1.3.0 format.");
         }
