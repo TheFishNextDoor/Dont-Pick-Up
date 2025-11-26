@@ -43,7 +43,13 @@ public class StringUtils {
     // Normalization
 
     @NotNull
-    private static String normalize(@NotNull String str) {
-        return str.trim().toLowerCase().replace(" ", "").replace("_", "").replace("-", "");
+    public static String normalize(@NotNull String str) {
+        return str.toLowerCase()
+                  .replace("minecraft:", "")
+                  .replace(" ", "")
+                  .replace("_", "")
+                  .replace("-", "")
+                  .replace(":", "")
+                  .trim();
     }
 }
